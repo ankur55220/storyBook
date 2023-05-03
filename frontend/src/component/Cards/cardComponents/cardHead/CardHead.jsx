@@ -323,7 +323,7 @@ text=="published" && !noMenu && postType=="audios"?(
         <DialogTitle>Publish Audio</DialogTitle>
         <DialogContent>
          
-          <Editor1 purpose="summarise" type="upload" url={postId && `https://storybook-web-app/publish/${postId}`} customWidth="100%"/>
+          <Editor1 purpose="summarise" type="upload" url={postId && `https://storybook-web-app.onrender.com/publish/${postId}`} customWidth="100%"/>
           {
             EditorData.loading && setTrigger?<CircularProgress />:
             EditorData.msg?<Alert severity="success">{EditorData.msg}</Alert>:
