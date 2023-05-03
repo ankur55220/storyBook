@@ -107,7 +107,7 @@ useEffect(()=>{
 
   return (
     <PageWrapperFullScreen>
-    <button onClick={()=>{console.log(StoryData)}}>click for likes</button>
+    
         <Sidebar />
         <Container 
         type="Home" 

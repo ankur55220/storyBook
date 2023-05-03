@@ -82,7 +82,7 @@ const AddComment=()=>{
     <CommentWrapper mt={mt}>
 
 
-      <button onClick={()=>{console.log(editor)}}>click me</button>
+    
         <PostCommentBox>
            {Form}
            <CustomButton content="post" width="10%" left="1rem" padding="0.5rem 0.2rem" translate="-4.5px" fun={AddComment}/>

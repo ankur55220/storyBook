@@ -77,7 +77,7 @@ function Audio() {
    
   return (
     <PageWrapperWithFlexStart>
-<button onClick={()=>{console.log(location)}}>click cmon baby</button>
+
         <PostWrapper>
    {
     editdata.loading?<CircularProgress />: 

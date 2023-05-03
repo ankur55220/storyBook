@@ -95,7 +95,7 @@ function Signup() {
     }
   return (
     <NewWrapper>
-<button onClick={()=>{console.log(loading)}}>click me</button>
+
         <SignupBox>
 
             <Title title="Signup"/>

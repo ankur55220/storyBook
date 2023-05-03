@@ -133,9 +133,6 @@ useEffect(()=>{
         <Title title="Latest Posts"/>
        <ContainerBody>
 
-       <button onClick={()=>{console.log(editInfo)}}>edit</button>
-       <button onClick={()=>{ dispatch(getMyAudio())}}>dispatch</button>
-        <button onClick={()=>{console.log(details)}}>clik mmmm</button>
         {
           type=="Home" || details.save=="published" || details.save=="Fav" || editInfo.active=="audios"?
           <Box sx={{ minWidth: 120 }}>
