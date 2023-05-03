@@ -5,7 +5,10 @@ const MiniCssExtractPlugin=require('mini-css-extract-plugin')
 module.exports ={
     entry: path.join(__dirname,'src','index.js'),
     devServer:{
-        historyApiFallback: true
+        historyApiFallback: true,
+        static: {
+            directory: path.join(__dirname, "dist"),
+          }
     },
     output:{
         path:path.resolve(__dirname,'dist'),
