@@ -5,7 +5,7 @@ import axios from 'axios'
 import { url } from "../url";
 
 
-const url=process.env.url
+
 
 const initialState={
     editorData:"",
