@@ -1,6 +1,7 @@
 import { createSlice ,createAsyncThunk} from "@reduxjs/toolkit";
 import UseLocalStorage from "../hooks/UseLocalStorage";
 import axios from 'axios'
+import { url } from "../url";
 
 const initialState={
     msg:"",
@@ -26,7 +27,7 @@ export const getSingleSave=createAsyncThunk(
             
             const token=getLoggedInUser()
 
-            const myPosts=await axios.post("http://localhost:4000/getSingleSave",postId,{
+            const myPosts=await axios.post(`${url}/getSingleSave`,postId,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -60,7 +61,7 @@ export const AddBookMark=createAsyncThunk(
             console.log("jjjjjjjj")
             const token=getLoggedInUser()
 
-            const myPosts=await axios.post("http://localhost:4000/addbookmark",postdata,{
+            const myPosts=await axios.post(`${url}/addbookmark`,postdata,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -94,7 +95,7 @@ export const getAllBookMark=createAsyncThunk(
 
             const token=getLoggedInUser()
 
-            const myPosts=await axios.post("http://localhost:4000/getAllBookMark",postdata,{
+            const myPosts=await axios.post(`${url}/getAllBookMark`,postdata,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -123,7 +124,7 @@ export const removeBookMark=createAsyncThunk(
 
             const token=getLoggedInUser()
 
-            const myPosts=await axios.post("http://localhost:4000/removeBookmark",postdata,{
+            const myPosts=await axios.post(`${url}/removeBookmark`,postdata,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -154,7 +155,7 @@ export const updateFav=createAsyncThunk(
 
             const token=getLoggedInUser()
 
-            const myPosts=await axios.post("http://localhost:4000/updateFav",postdata,{
+            const myPosts=await axios.post(`${url}/updateFav`,postdata,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -184,7 +185,7 @@ export const AddNewAud=createAsyncThunk(
 
             const token=getLoggedInUser()
 
-            const myPosts=await axios.post("http://localhost:4000/AddNewAudio",postdata,{
+            const myPosts=await axios.post(`${url}/AddNewAudio`,postdata,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`

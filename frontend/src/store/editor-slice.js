@@ -2,6 +2,11 @@ import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import { convertToRaw } from "draft-js";
 import UseLocalStorage from "../hooks/UseLocalStorage";
 import axios from 'axios'
+import { url } from "../url";
+
+
+const url=process.env.url
+
 const initialState={
     editorData:"",
     msg:"",
@@ -28,7 +33,7 @@ export const getFalse=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/sendFalse",_,{
+            const myPosts=await axios.post(`${url}/sendFalse`,_,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -54,7 +59,7 @@ export const saveedit=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/editSave",userDetails,{
+            const myPosts=await axios.post(`${url}/editSave`,userDetails,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -81,7 +86,7 @@ export const updateedit=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/updateedit",userDetails,{
+            const myPosts=await axios.post(`${url}/updateedit`,userDetails,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -111,7 +116,7 @@ export const publishStory=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/publishStory",postDetails,{
+            const myPosts=await axios.post(`${url}/publishStory`,postDetails,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -138,7 +143,7 @@ export const getSingleData=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/getSingleStory",userDetails,{
+            const myPosts=await axios.post(`${url}/getSingleStory`,userDetails,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -166,7 +171,7 @@ export const AddNotify=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/AddNotification",userDetails,{
+            const myPosts=await axios.post(`${url}/AddNotification`,userDetails,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -194,7 +199,7 @@ export const AddaudioNotify=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/AddAudioNotify",userDetails,{
+            const myPosts=await axios.post(`${url}/AddAudioNotify`,userDetails,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -222,7 +227,7 @@ export const getSingleAudio=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/getSingleAudio",userDetails,{
+            const myPosts=await axios.post(`${url}/getSingleAudio`,userDetails,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -250,7 +255,7 @@ export const changeSeen=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/markAsSeen",userDetails,{
+            const myPosts=await axios.post(`${url}/markAsSeen`,userDetails,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -278,7 +283,7 @@ export const getNameAndId=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm",userDetails)
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/getNamesAndId",userDetails,{
+            const myPosts=await axios.post(`${url}/getNamesAndId`,userDetails,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -306,7 +311,7 @@ export const getAllPublished=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.get("http://localhost:4000/getAllpublishedStories",{
+            const myPosts=await axios.get(`${url}/getAllpublishedStories`,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -334,7 +339,7 @@ export const getAllaudio=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.get("http://localhost:4000/getAllAudios",{
+            const myPosts=await axios.get(`${url}/getAllAudios`,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -363,7 +368,7 @@ export const AddFavourite=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/addFavourite",info,{
+            const myPosts=await axios.post(`${url}/addFavourite`,info,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -392,7 +397,7 @@ export const AddFavouriteAudio=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/AddfavAudio",info,{
+            const myPosts=await axios.post(`${url}/AddfavAudio`,info,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -419,7 +424,7 @@ export const RemoveFavouriteAudio=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/RemovefavAudio",info,{
+            const myPosts=await axios.post(`${url}/RemovefavAudio`,info,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -447,7 +452,7 @@ export const AddLikes=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/AddLikes",details,{
+            const myPosts=await axios.post(`${url}/AddLikes`,details,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`

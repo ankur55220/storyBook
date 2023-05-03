@@ -1,6 +1,8 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import UseLocalStorage from "../hooks/UseLocalStorage";
 import axios from 'axios'
+import { url } from "../url";
+
 
 const initialState={
     loading:true,
@@ -26,7 +28,7 @@ export const AddComments=createAsyncThunk(
             
             const token=getLoggedInUser()
 
-            const myPosts=await axios.post("http://localhost:4000/AddComment",details,{
+            const myPosts=await axios.post(`${url}/AddComment`,details,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -61,7 +63,7 @@ export const addReply=createAsyncThunk(
             
             const token=getLoggedInUser()
 
-            const myPosts=await axios.post("http://localhost:4000/AddReply",details,{
+            const myPosts=await axios.post(`${url}/AddReply`,details,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -95,7 +97,7 @@ export const AllComments=createAsyncThunk(
             
             const token=getLoggedInUser()
 
-            const myPosts=await axios.post("http://localhost:4000/getAllComments",details,{
+            const myPosts=await axios.post(`${url}/getAllComments`,details,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`

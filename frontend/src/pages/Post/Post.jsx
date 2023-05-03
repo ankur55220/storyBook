@@ -8,7 +8,7 @@ import { useSelector,useDispatch } from 'react-redux'
 import { useParams,useLocation } from 'react-router-dom'
 import { useSelect } from '@mui/base'
 import { CircularProgress } from '@mui/material'
-import { getUserId } from '../../../backend/controller/storyController'
+
 import { getMyId } from '../../store/user-slice'
 
 const PageWrapperWithFlexStart=styled(PageWrapper)`

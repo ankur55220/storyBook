@@ -2,6 +2,8 @@ import { async } from "@firebase/util";
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import UseLocalStorage from "../hooks/UseLocalStorage";
 import axios from 'axios'
+import { url } from "../url";
+
 
 const initialState={
     loading:true,
@@ -29,7 +31,7 @@ export const loginUser=createAsyncThunk(
            try{
 
            
-            const  loginAction=await axios.post("http://localhost:4000/login",userdetails);
+            const  loginAction=await axios.post(`${url}/login`,userdetails);
             const data=await loginAction.data;
              return data;
 
@@ -52,7 +54,7 @@ export const unPublishAudio=createAsyncThunk(
            try{
 
             const token=getLoggedInUser();
-            const  loginAction=await axios.post("http://localhost:4000/unPublishAudio",userdetails,{
+            const  loginAction=await axios.post(`${url}/unPublishAudio`,userdetails,{
                 headers:{
                     'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
@@ -81,7 +83,7 @@ export const unPublishScript=createAsyncThunk(
            try{
 
             const token=getLoggedInUser();
-            const  loginAction=await axios.post("http://localhost:4000/unPublishScript",userdetails,{
+            const  loginAction=await axios.post(`${url}/unPublishScript`,userdetails,{
                 headers:{
                     'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
@@ -106,7 +108,7 @@ export const registerUser=createAsyncThunk(
     async (userdetails,{rejectWithValue})=>{
 
         try{
-            const  registerAction=await axios.post("http://localhost:4000/signup",userdetails);
+            const  registerAction=await axios.post(`${url}/signup`,userdetails);
             const data=await registerAction.data;
              return data;
         }
@@ -129,7 +131,7 @@ export const getMyPosts=createAsyncThunk(
             console.log("gerMyPosts")
             const token=getLoggedInUser();
 
-            const myPosts=await axios.post("http://localhost:4000/AllStoriesByUser",dummy,{
+            const myPosts=await axios.post(`${url}/AllStoriesByUser`,dummy,{
                 headers:{
                     'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
@@ -161,7 +163,7 @@ export const deleteSave=createAsyncThunk(
             console.log("gerMyPosts")
             const token=getLoggedInUser();
 
-            const myPosts=await axios.post("http://localhost:4000/deleteSave",dummy,{
+            const myPosts=await axios.post(`${url}/deleteSave`,dummy,{
                 headers:{
                     'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
@@ -190,7 +192,7 @@ export const getMyFav=createAsyncThunk(
             console.log("gerMyFav")
             const token=getLoggedInUser();
             console.log(token)
-            const myPosts=await axios.post("http://localhost:4000/getAllFav",dummy,{
+            const myPosts=await axios.post(`${url}/getAllFav`,dummy,{
                 headers:{
                     'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
@@ -218,7 +220,7 @@ export const getMyPublished=createAsyncThunk(
 
             const token=getLoggedInUser();
 
-            const myPosts=await axios.post("http://localhost:4000/storiesPublishedByUser",dummy,{
+            const myPosts=await axios.post(`${url}/storiesPublishedByUser`,dummy,{
                 headers:{
                     'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
@@ -249,7 +251,7 @@ export const getMyId=createAsyncThunk(
             }
             const token=getLoggedInUser();
 
-            const myPosts=await axios.post("http://localhost:4000/getUserId",_,{
+            const myPosts=await axios.post(`${url}/getUserId`,_,{
                 headers:{
                     'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
@@ -285,7 +287,7 @@ export const getMyAudio=createAsyncThunk(
             }
             const token=getLoggedInUser();
 
-            const myPosts=await axios.post("http://localhost:4000/loginAudio",details,{
+            const myPosts=await axios.post(`${url}/loginAudio`,details,{
                 headers:{
                     'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
@@ -314,7 +316,7 @@ export const getPublishedById=createAsyncThunk(
 
             console.log("asdafefmmmmmmmmm")
             const token=getLoggedInUser();
-            const myPosts=await axios.post("http://localhost:4000/getpublishedById",userDetails,{
+            const myPosts=await axios.post(`${url}/getpublishedById`,userDetails,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -345,7 +347,7 @@ export const getMyFavAudio=createAsyncThunk(
             }
             const token=getLoggedInUser();
 
-            const myPosts=await axios.post("http://localhost:4000/getAllLoggedInFav",details,{
+            const myPosts=await axios.post(`${url}/getAllLoggedInFav`,details,{
                 headers:{
                     'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
@@ -379,7 +381,7 @@ export const getAllAudiosbyUser=createAsyncThunk(
             }
             const token=getLoggedInUser();
 
-            const myPosts=await axios.post("http://localhost:4000/getAllAudiosBy",details,{
+            const myPosts=await axios.post(`${url}/getAllAudiosBy`,details,{
                 headers:{
                     'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
@@ -411,7 +413,7 @@ createAsyncThunk(
             }
             const token=getLoggedInUser();
 
-            const myPosts=await axios.post("http://localhost:4000/removeAudioFromFavourite",details,{
+            const myPosts=await axios.post(`${url}/removeAudioFromFavourite`,details,{
                 headers:{
                     'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
@@ -443,7 +445,7 @@ createAsyncThunk(
             }
             const token=getLoggedInUser();
 
-            const myPosts=await axios.post("http://localhost:4000/removeScriptFromFavourite",details,{
+            const myPosts=await axios.post(`${url}/removeScriptFromFavourite`,details,{
                 headers:{
                     'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
