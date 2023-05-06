@@ -16,9 +16,10 @@ import { CircularProgress } from '@mui/material'
 const PageWrapperFullScreen=styled(PageWrapper)`
 height:90vh;
 overflow-y:auto;
-align-items:flex-start;
+align-items:center;
 justify-content:center;
 background-color:#ffff;
+border:1px solid red;
 `
 
 const Container=styled.div`
@@ -28,6 +29,8 @@ padding:1.5rem 1rem;
 border-radius:10px;
 
 background-color:#ffff;
+border:1px solid green;
+
 
 `
 function Edit() {
