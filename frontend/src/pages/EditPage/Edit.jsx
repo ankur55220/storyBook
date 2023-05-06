@@ -24,7 +24,7 @@ border:1px solid red;
 
 const Container=styled.div`
 width:80%;
-margin-top:1.5rem;
+margin-top:20.5rem;
 padding:1.5rem 1rem;
 border-radius:10px;
 
