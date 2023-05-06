@@ -567,7 +567,7 @@ useEffect(()=>{
 
    {
     type=="readOnly"?null:(
-      <div className='utility-btns' style={{flexWrap="wrap",width:customWidth?customWidth+.3:"60.3%",display:"flex",justifyContent:"flex-start",alignItems:"center",backgroundColor:"#cad2c5"}}>
+      <div className='utility-btns' style={{width:customWidth?customWidth:"60.3%",flexWrap:"wrap",display:"flex",justifyContent:"flex-start",alignItems:"center",backgroundColor:"#cad2c5"}}>
       
       <button style={btnstyle} onClick={(e)=>{applyStyle(e,"B")}}>B</button>  <button style={btnstyle} onClick={(e)=>{applyStyle(e,"H1")}}>H1</button>  <button style={btnstyle} onClick={(e)=>{applyStyle(e,"H2")}}>H2</button>  
       
