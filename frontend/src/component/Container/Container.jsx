@@ -45,6 +45,7 @@ background-color:#ffff;
 font-family:Lato, sans-serif;
 border-radius:10px;
 margin-bottom:1.5rem;
+padding:1rem;
 color:#778899;
 margin-right:1rem;
 

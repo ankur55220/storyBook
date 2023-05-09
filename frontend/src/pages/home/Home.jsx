@@ -29,6 +29,7 @@ useEffect(()=>{
   console.log("sdjashgdj====")
   
 dispatch(getMyId())
+.then( dispatch(getAllPublished()))
 // dispatch(updateLikeStatus(""))
   console.log("sd0000000000")
 },[])

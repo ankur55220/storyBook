@@ -16,7 +16,7 @@ import { getMyId } from '../../store/user-slice';
 import { useDispatch,useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { changeSeen } from '../../store/editor-slice';
-const pages = [];
+const pages = ["home","profile"];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Navbar() {
@@ -33,8 +33,13 @@ function Navbar() {
   
   };
 
-  const handleCloseNavMenu = () => {
+  const handleCloseNavMenu = (pages) => {
     setAnchorElNav(null);
+
+    if(pages!=""){
+      return navigate(`/${pages}`)
+
+    }
   };
 
   const handleCloseUserMenu = () => {
@@ -121,13 +126,13 @@ function Navbar() {
                 horizontal: 'left',
               }}
               open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
+              onClick={()=>{handleCloseNavMenu("")}}
               sx={{
                 display: { xs: 'block', md: 'none' },
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
+                <MenuItem key={page} onClick={()=>{handleCloseNavMenu(page)}}>
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
@@ -156,7 +161,7 @@ function Navbar() {
             {pages.map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={()=>{handleCloseNavMenu(page)}}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page}
