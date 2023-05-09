@@ -18,6 +18,9 @@ width:30%;
 padding:0.5rem 1.5rem;
 background-color:#ffff;
 border-radius:10px;
+@media (max-width: 800px) {
+    width:80%;
+  }
 
 
 `
