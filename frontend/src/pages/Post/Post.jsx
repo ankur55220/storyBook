@@ -8,6 +8,7 @@ import { useSelector,useDispatch } from 'react-redux'
 import { useParams,useLocation } from 'react-router-dom'
 import { useSelect } from '@mui/base'
 import { CircularProgress } from '@mui/material'
+import Alert from '@mui/material/Alert';
 
 import { getMyId } from '../../store/user-slice'
 
@@ -93,6 +94,31 @@ function Post() {
     }
   
   },[editdata.typeOfPost])
+
+
+  const [err,setErr]=React.useState(true)
+  const [right,setRight]=React.useState(false)
+  useEffect(()=>{
+    let timeout;
+if(editdata.msg!=""){
+  setRight(true)
+  timeout=setTimeout(()=>{
+     setRight(false)
+  },2000)
+
+}
+
+
+if(editdata.err!=""){
+  setErr(true)
+  timeout=setTimeout(()=>{
+    setErr(false)
+  },2000)
+
+}
+    
+
+  },[editdata.msg,editdata.err])
    
   return (
 
@@ -101,6 +127,12 @@ function Post() {
 
 
       <PageWrapperWithFlexStart>
+
+        {
+          setRight?<Alert severity="success">{editdata.msg}</Alert>:
+          setErr?<Alert severity="error">{editdata.err}</Alert>:
+          null
+        }
 
       <PostWrapper>
  {

@@ -36,6 +36,21 @@ background-color:#ffff;
 font-family:Lato, sans-serif;
 border-radius:10px;
 
+
+`
+
+const ShortMsg=styled.div`
+width:100%;
+background-color:#ffff;
+font-family:Lato, sans-serif;
+border-radius:10px;
+margin-bottom:1.5rem;
+color:#778899;
+margin-right:1rem;
+
+
+
+
 `
 function Container({width,loading,error,posts,authors,user,type,postType,typeOf,likesNo,dislikesNo,userLiked,userDisliked}) {
 
@@ -131,7 +146,22 @@ useEffect(()=>{
   return (
     <Container2 width={width}>
         <Title title="Latest Posts"/>
+
+       
+
+
        <ContainerBody>
+       <ShortMsg>
+          {
+
+          
+            details.save=="save"?"It stores all the unfinished and unpublished ongoing sripts by the uesr":
+            details.save=="Fav"?"All favourited scripts can be recorded an audio to publish it click on publish arrrow":
+            details.save=="published"?"here you will find all the published scripts and audios by user":
+            null
+            
+          }
+        </ShortMsg>
 
         {
           type=="Home" || details.save=="published" || details.save=="Fav" || editInfo.active=="audios"?

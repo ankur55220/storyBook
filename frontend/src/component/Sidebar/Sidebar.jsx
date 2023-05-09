@@ -9,10 +9,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import BookIcon from '@mui/icons-material/Book';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useSelector,useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getMyPublished,getMyPosts,getMyFav} from '../../store/user-slice';
 import { changeActive } from '../../store/editor-slice';
 import { getFalse } from '../../store/editor-slice';
+import UseLocalStorage from '../../hooks/UseLocalStorage';
+
 
 const ProfilePic=({user})=>{
 
@@ -202,13 +204,26 @@ const clickHandler=(type)=>{
 }
 function Sidebar({type,loading,error,user}) {
 
-
+  const navigate=useNavigate()
   
-
+  const {logoutUser}=useLocation()
   useEffect(()=>{
 
     console.log(loading,error,user,"pppppppp")
   },[loading,error,user])
+
+
+  const travel=()=>{
+
+    console.log("jjjjjjjjjjjjjjjjjjjkkkkkkkkkkkkkk")
+    return navigate("/profile")
+  }
+
+  const logout=()=>{
+logout()
+
+navigate("/")
+  }
   return (
     <SideBar>
         <SideBarBody>
@@ -225,8 +240,8 @@ function Sidebar({type,loading,error,user}) {
 
          {
           type?<ProfileMenu typeOf={type}/>:<>
-           <FirstMenuItem>
-                <AccountBoxIcon/>&nbsp;&nbsp;&nbsp;My Profile
+           <FirstMenuItem onClick={travel}>
+                <AccountBoxIcon />&nbsp;&nbsp;&nbsp;My Profile
             </FirstMenuItem>
               
           

@@ -74,9 +74,41 @@ function Audio() {
       dispatch(getSingleAudio({audioId:id}))
     }
   },[editdata.likeStatus])
+
+  const [err,setErr]=useSEtate(true)
+  const [right,setRight]=useState(false)
+
+  useEffect(()=>{
+    let timeout;
+if(editdata.msg!=""){
+  setRight(true)
+  timeout=setTimeout(()=>{
+     setRight(false)
+  },2000)
+
+}
+
+
+if(editdata.err!=""){
+  setErr(true)
+  timeout=setTimeout(()=>{
+    setErr(false)
+  },2000)
+
+}
+    
+
+  },[editdata.msg,editdata.err])
+   
    
   return (
     <PageWrapperWithFlexStart>
+
+{
+          setRight?<Alert severity="success">{editdata.msg}</Alert>:
+          setErr?<Alert severity="error">{editdata.err}</Alert>:
+          null
+        }
 
         <PostWrapper>
    {

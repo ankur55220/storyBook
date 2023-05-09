@@ -54,6 +54,8 @@ function CardHead({type,align,img,name,postId,userId,text,noMenu,postType,audId}
   const [open,setOpen]=useState(false)
 
   const [trigger,setTrigger] = useState(true)
+  const [trigger2,setTrigger2] = useState(true)
+
 
   const navigate=useNavigate()
   
@@ -169,7 +171,7 @@ function CardHead({type,align,img,name,postId,userId,text,noMenu,postType,audId}
   },[audid])
 
   const clickHandler2=()=>{
-    setTrigger(true)
+    setTrigger2(true)
     const data={
       
       body:EditorData.editorData,
@@ -218,6 +220,8 @@ function CardHead({type,align,img,name,postId,userId,text,noMenu,postType,audId}
 
         timeout=setTimeout(() => {
           setTrigger(false)
+          setTrigger2(false)
+
         }, 2000);
        
       }
@@ -300,6 +304,9 @@ text=="published" && !noMenu && postType=="audios"?(
 
     <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add summary</DialogTitle>
+        <div className="msg" style={{color:"#778899",fontSize:"1rem",paddingRight:"8%",paddingLeft:"8%"}}>
+          to tag a user use @ following user name and to link script highlight any text and click on add script 
+        </div>
         <DialogContent>
          
           <Editor1 purpose="summarise" url={postId && `https://storybook-app-web.onrender.com/publish/${postId}`} address="address" customWidth="100%"/>
@@ -321,11 +328,15 @@ text=="published" && !noMenu && postType=="audios"?(
 
       <Dialog open={open2} onClose={handleClose2}>
         <DialogTitle>Publish Audio</DialogTitle>
+
+        <div className="msg" style={{color:"#778899",fontSize:"1rem",paddingRight:"8%",paddingLeft:"8%"}}>
+          to tag a user use @ following user name and to link script highlight any text and click on add script 
+        </div>
         <DialogContent>
          
           <Editor1 purpose="summarise" type="upload" url={postId && `https://storybook-app-web.onrender.com/publish/${postId}`} customWidth="100%"/>
           {
-            EditorData.loading && setTrigger?<CircularProgress />:
+            EditorData.loading && !setTrigger2?<CircularProgress />:
             EditorData.msg?<Alert severity="success">{EditorData.msg}</Alert>:
             EditorData.err?
             <Alert severity="error">{EditorData.err}</Alert>:

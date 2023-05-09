@@ -17,6 +17,7 @@ import { getSingleData,getSingleAudio,RemoveFavouriteAudio,updateLikeStatus } fr
 import { addReply } from '../../../../store/comment-slice';
 import { changeLikeStatus } from '../../../../store/editor-slice';
 import { useEffect } from 'react';
+import { Tooltip } from '@mui/material';
 const CardFooterWrapper=styled.div`
      width:100%;
      padding:0rem 0.5rem;
@@ -221,8 +222,16 @@ const [reply,setReply]=React.useState("")
 
       {
         user.save=="save"?<>
+
+        <Tooltip title="Delete the scripy">
         <DeleteIcon style={{marginRight:"0.5rem",color:"#587b7f",cursor:"pointer"}} onClick={deleteHandler}/>
+
+        </Tooltip>
+
+        <Tooltip title="Edit the script">
         <EditAttributesIcon style={{marginRight:"1rem",color:"#587b7f",cursor:"pointer"}} onClick={()=>{clickHandler("save")}}/>
+
+        </Tooltip>
         
         </>:
         <>
