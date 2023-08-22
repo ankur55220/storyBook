@@ -3,7 +3,7 @@ import DataConn from './config/database.js';
 const port= process.env.PORT || 4000
 
 
-DataConn.then(()=>{
+DataConn().then(()=>{
 
     app.listen(port,()=>{
          console.log(`listening at port 4000 ${port}`)
