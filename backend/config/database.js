@@ -5,16 +5,17 @@ const connectionParams={
     useUnifiedTopology: true 
 }
 
-const DataConn=()=>{
+const DataConn=()=>async{
 
+    try{
+        const conn=await mongoose.connect(process.env.mongoUrl,connectionParams);
+        console.log(`mongoDb connected {conn.connection.host} `)
+    }
+    catch(error){
+        console.log("something went wrong")
+       
+    }
 
-    mongoose.connect(process.env.mongoUrl,connectionParams)
-.then(()=>{
-    console.log("connected to database")
-})
-.catch((err)=>{
-    console.log(err)
-})
 
 
 }
