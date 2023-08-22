@@ -155,7 +155,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            STORYBOOK
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
