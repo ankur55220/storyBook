@@ -24,7 +24,10 @@ dotenv.config({path:path.join(__dirname,"/config/config.env")})
 
 
 
-
+app.get("/",(req,res)=>{
+  res.send({title:"book"});
+  )
+  
 app.use(auth)
 app.use(StoryRoutes)
 app.use(AudioRoutes)
