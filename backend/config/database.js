@@ -5,7 +5,7 @@ const connectionParams={
     useUnifiedTopology: true 
 }
 
-const DataConn=()=>async{
+const DataConn=async()=>{
 
     try{
         const conn=await mongoose.connect(process.env.mongoUrl,connectionParams);
