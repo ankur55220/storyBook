@@ -52,13 +52,8 @@ export const RegisterController=AsyncMiddleWare(
 
       
 
-    newUser.save()
-    .then((user)=>{
-        console.log(user)
-    })
-    .catch((err)=>{
-        console.log(err)
-    })
+   await newUser.save()
+    
 
     console.log("gggggg")
        return res.status(200).json({
