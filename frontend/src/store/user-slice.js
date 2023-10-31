@@ -600,7 +600,7 @@ const userSlice= createSlice({
             state.save=""
         })
 
-        builder.addCase(registerUser.pending,(state,action)=>{
+        builder.addCase(addNewNotify.pending,(state,action)=>{
             state.loading=true,
             state.msg=""
             state.save=""
