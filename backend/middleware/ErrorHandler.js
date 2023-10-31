@@ -3,8 +3,10 @@ export const ErrorHandler=async (err,req,res,next)=>{
 
     const statuscode= 404;
 
-    console.log(err)
+    console.log(err,"aaayega to")
  res.status(err.statusCode).json({error:err.message})
+
+
     
     // res.status(statuscode)
 

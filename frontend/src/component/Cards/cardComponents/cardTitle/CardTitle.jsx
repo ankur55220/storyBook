@@ -10,13 +10,13 @@ const TitleWrapper=styled.div`
       margin-bottom:1rem;
     
     `
-function CardTitle({title}) {
+function CardTitle({title,genre}) {
 
     
   return (
     <TitleWrapper>
        <h3>{title}</h3>
-       <span style={{fontSize:"0.7rem",color:"#587b7f",fontWeight:"bold"}}>horror</span>
+       <span style={{fontSize:"0.7rem",color:"#587b7f",fontWeight:"bold"}}>{genre}</span>
         
     </TitleWrapper>
 

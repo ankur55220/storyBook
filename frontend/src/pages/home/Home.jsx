@@ -14,12 +14,14 @@ import { useState } from 'react'
 import { getFalse } from '../../store/editor-slice'
 
 const PageWrapperFullScreen=styled(PageWrapper)`
-height:90vh;
+min-height:90vh;
 overflow-y:auto;
 align-items:flex-start;
 justify-content:flex-start;
 background-color:#ffff;
 `
+
+
 function Home() {
 
 
@@ -27,11 +29,11 @@ const StoryData=useSelector(state=>state.editor)
 const dispatch=useDispatch()
 useEffect(()=>{
   console.log("sdjashgdj====")
-  
-dispatch(getMyId())
-.then( dispatch(getAllPublished()))
+  dispatch(getMyId())
+// dispatch(getAllPublished("hey"))
+// .then(()=>{dispatch(getMyId())} )
 // dispatch(updateLikeStatus(""))
-  console.log("sd0000000000")
+  
 },[])
 
 
@@ -40,22 +42,23 @@ useEffect(()=>{
   console.log(StoryData)
 
   if(StoryData.active=="scripts"){
-    dispatch(getAllPublished())
-        
-
+    dispatch(getAllPublished("hooo"))
+    
+    
   }else if(StoryData.active=="audios"){
     dispatch(getAllaudio())
     
+    
 
   }
-
+  console.log(StoryData.active)
 
 },[StoryData.active])
 
 useEffect(()=>{
 
   if(StoryData.typeOfPost=="scripts"){
-    dispatch(getAllPublished())
+    dispatch(getAllPublished("third"))
     .then(()=>dispatch(getFalse()))
     .then(()=>{console.log("working")})
 
@@ -107,7 +110,11 @@ useEffect(()=>{
 
 
   return (
+    <>
+   
     <PageWrapperFullScreen>
+
+      
     
         <Sidebar />
         <Container 
@@ -126,6 +133,8 @@ useEffect(()=>{
 
 
     </PageWrapperFullScreen>
+
+    </>
   )
 }
 

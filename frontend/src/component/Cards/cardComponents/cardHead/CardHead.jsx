@@ -20,6 +20,7 @@ import {getMyId, unPublishAudio,unPublishScript } from '../../../../store/user-s
 import { getMyPublished,getMyAudio } from '../../../../store/user-slice';
 import { AddNotify,changeNavTrigger,AddaudioNotify } from '../../../../store/editor-slice';
 import Alert from '@mui/material/Alert';
+import ReactTimeAgo from 'react-time-ago'
 
 const HeadWrapper = styled.div`
     width: 100%;
@@ -44,12 +45,13 @@ const HeadWrapper = styled.div`
 
   const ProfileName = styled.div`
     
-    margin-left:${props=>props.type?"0.5rem":"0.2"};
+    margin-left:${props=>props.type?"0.5rem":"0.2rem"};
     cursor:pointer;
+
 
   `;
 
-function CardHead({type,align,img,name,postId,userId,text,noMenu,postType,audId}) {
+function CardHead({profileType,type,align,img,name,postId,userId,text,noMenu,postType,audId,createdOn}) {
 
   const [open,setOpen]=useState(false)
 
@@ -82,8 +84,8 @@ function CardHead({type,align,img,name,postId,userId,text,noMenu,postType,audId}
       return
     }
 
-
-    console.log(proType,"@@@@@@@@@@@@@@@@@@@@@@@@")
+    console.log(postId,audId,"@@@@@@@@@@@@@@@@@@@@@@@@")
+    
     const editData=JSON.parse(EditorData.editorData)
 
     const data=Object.keys(editData.entityMap)
@@ -93,8 +95,35 @@ function CardHead({type,align,img,name,postId,userId,text,noMenu,postType,audId}
 
     const allTags=linkDatas.map((item)=>editData.entityMap[`${item}`])
 
+     if(linkDatas.length==0 || allTags.length==0){
 
+      if(proType=="audios"){
+        const val={
+          type:proType,
+          postid:postId,
+          data:[],
+          audid
+          
+    
+        }
+    
+    
+        console.log(val,"+===============================")
+        dispatch(AddNotify(val))
+  
+  
+        const data1={
+          postid:postId,
+          audid
+        }
+       
+  
+        // dispatch(AddaudioNotify(data1))
+      }
 
+      return
+     }
+    
    
     
 
@@ -150,8 +179,9 @@ function CardHead({type,align,img,name,postId,userId,text,noMenu,postType,audId}
     }
 
     dispatch(publishStory(data))
+    .then(()=>dispatch(changeNavTrigger()))
     handleNotifications("scripts")
-    dispatch(changeNavTrigger())
+    
    
   }
 
@@ -164,6 +194,8 @@ function CardHead({type,align,img,name,postId,userId,text,noMenu,postType,audId}
   useEffect(()=>{
 
     if(audid!=""){
+
+      console.log("ddddddddddddddddd",audid)
       handleNotifications("audios")
 
     }
@@ -179,13 +211,19 @@ function CardHead({type,align,img,name,postId,userId,text,noMenu,postType,audId}
     }
 
     dispatch(AddNewAud(data))
+    .then(()=>dispatch(changeNavTrigger()))
     
-    dispatch(changeNavTrigger())
+    
+
+  
    
   }
 
   const goToProfile=()=>{
 
+    if(profileType && profileType=="Othersprofile"){
+      return
+    }
     return navigate(`/user/${userId}`,{state:{loggedId:logged.userId.id}})
   }
 
@@ -201,7 +239,8 @@ function CardHead({type,align,img,name,postId,userId,text,noMenu,postType,audId}
 
     console.log("unpublish sriptssssssssssssssssss")
     dispatch(unPublishScript({id:postId}))
-    dispatch(getMyPublished({dummy:"dummy"}))
+    .then(()=> dispatch(getMyPublished({dummy:"dummy"})))
+   
 
   }
 
@@ -250,7 +289,7 @@ function CardHead({type,align,img,name,postId,userId,text,noMenu,postType,audId}
         <ProfileName type={type} onClick={goToProfile}>{name}</ProfileName>
 
         {
-          type?<span style={{marginLeft:"0.5rem",color:"#808080"}}>4 hrs ago</span>:null
+          type?<span style={{marginLeft:"0.5rem",color:"#808080"}}><ReactTimeAgo date={createdOn} locale="en-US"/></span>:null
         }
       </div>
 {
@@ -293,7 +332,7 @@ text=="published" && !noMenu && postType=="audios"?(
        
 
         <Tooltip title="script offer">
-          <TextSnippetIcon style={{ color: '#587b7f', cursor: 'pointer' }} />
+          <TextSnippetIcon style={{ color: '#587b7f'}} />
         </Tooltip>
       </div>
 

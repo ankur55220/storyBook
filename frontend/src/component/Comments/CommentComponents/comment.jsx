@@ -76,7 +76,7 @@ const findAuthor=(itemId,itemType)=>{
 <>
             <CommentWrapper>
 
-        <CardHead type="comment" align="flex-start" img={findAuthor(item.author,"img")} name={findAuthor(item.author,"name")}/>
+        <CardHead type="comment"  createdOn={item.createdAt} align="flex-start" img={findAuthor(item.author,"img")} name={findAuthor(item.author,"name")}/>
         
         <CommentBody>
             {item.body}

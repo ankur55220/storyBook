@@ -19,7 +19,21 @@ import { useDispatch,useSelector } from 'react-redux';
 import {CircularProgress}  from '@mui/material';
 import { addUrl } from '../../store/audio-slice';
 import { getNameAndId } from '../../store/editor-slice';
-
+const Btn1=styled.button`
+  
+  display:inline-block;
+  padding:0.5rem 1.2rem;
+  outline:none;
+  border:none;
+  background-color:#cad2c5;
+  color:#${(props)=>(props.theme.colors.btn_clr_light)};
+  font-size:0.8rem;
+  border-radius:5px;
+  display:flex;
+  align-items:center;
+  margin-right:1.2rem;
+  cursor:pointer;
+  `
 
 
 function Audio(props){
@@ -157,21 +171,7 @@ function Editor1({type,address,content,loading,url,customWidth,customHeight,noBo
   //   }
   // },[popup])
 
-  const Btn1=styled.button`
   
-  display:inline-block;
-  padding:0.5rem 1.2rem;
-  outline:none;
-  border:none;
-  background-color:#cad2c5;
-  color:#${(props)=>(props.theme.colors.btn_clr_light)};
-  font-size:0.8rem;
-  border-radius:5px;
-  display:flex;
-  align-items:center;
-  margin-right:1.2rem;
-  cursor:pointer;
-  `
 
 const btnstyle={
   display:"inline-block",
@@ -369,7 +369,7 @@ const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
     function findWithRegex(regex, contentBlock, callback) {
       const text = contentBlock.getText();
 
-
+      console.log("here hii")
 
       let matchArr,
         start;
@@ -542,7 +542,8 @@ useEffect(()=>{
 
 
   if(type!="readOnly"){
-    console.log(JSON.stringify(convertToRaw(editor.getCurrentContent())))
+    // console.log(JSON.stringify(convertToRaw(editor.getCurrentContent())))
+    
 
     const val=JSON.stringify(convertToRaw(editor.getCurrentContent()))
    dispatch(addData(val))
@@ -556,6 +557,8 @@ useEffect(()=>{
 
   return (
     <>
+
+    <button onClick={()=>{console.log(purpose)}}>edit work</button>
 
 {
   loading?<CircularProgress />:(

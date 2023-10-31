@@ -11,10 +11,12 @@ import { CircularProgress } from '@mui/material'
 import Alert from '@mui/material/Alert';
 
 import { getMyId } from '../../store/user-slice'
+import { changeSeen } from '../../store/editor-slice'
 
 const PageWrapperWithFlexStart=styled(PageWrapper)`
     
 align-items:flex-start;
+min-height:88vh;
 `
 
 const PostWrapper=styled.div`
@@ -50,7 +52,7 @@ function Post() {
 
 
   useEffect(()=>{
-   console.log("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
+   console.log(id,"rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr")
     dispatch(getSingleData({id}))
 
      .then(()=> dispatch(changeNavTrigger()))
@@ -128,6 +130,10 @@ if(editdata.err!=""){
 
       <PageWrapperWithFlexStart>
 
+       
+
+       
+
         {
           setRight?<Alert severity="success">{editdata.msg}</Alert>:
           setErr?<Alert severity="error">{editdata.err}</Alert>:
@@ -147,7 +153,7 @@ if(editdata.err!=""){
   dislikesNo={editdata.backendEditdata.dislikes}
   userLiked={editdata.backendEditdata.userLiked}
   userDisliked={editdata.backendEditdata.userDisliked}
-
+  comingFromPost={id}
   postType="scripts"
   name={editdata.backendEditdata.user?.username}
   bg="white" 
@@ -159,7 +165,11 @@ if(editdata.err!=""){
 
 
         
-         <Comments comType="script" postId={id}/>
+         <Comments comType="script" postId={id} state={Array.isArray(editdata.backendEditdata.posts)?
+         
+         editdata.backendEditdata.posts[0].status=="unpublished"?true:false:false
+        
+        }/>
          
 
       </PostWrapper>

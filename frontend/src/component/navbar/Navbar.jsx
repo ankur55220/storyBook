@@ -1,4 +1,7 @@
-import React,{useEffect,useState} from 'react';
+import React,{useEffect,useState,useRef} from 'react';
+import InputBase from '@mui/material/InputBase';
+import styledcom from '@emotion/styled';
+import { styled,alpha} from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,32 +15,65 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { getMyId } from '../../store/user-slice';
+import { getMyId ,setActivePage} from '../../store/user-slice';
 import { useDispatch,useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,Navigate } from 'react-router-dom';
 import { changeSeen } from '../../store/editor-slice';
+import CircleNotificationsIcon from '@mui/icons-material/CircleNotifications';
+import SearchIcon from '@mui/icons-material/Search';
+
+
 const pages = ["home","profile"];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+
+
+
+
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [trigger,setTrigger]=useState(false)
+  
+  
   const dispatch=useDispatch()
   const navigate=useNavigate()
+
+  const myref=useRef()
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
+
+    console.log("jjjjjjjjjjjjjjjjjjjjj")
     setTrigger(!trigger)
   
+
   };
+
+
+
+  useEffect(()=>{
+
+
+    
+
+    
+    const locArray=window.location.href.split("/")
+
+    dispatch(setActivePage(locArray[locArray.length-1]))
+
+    
+
+  },[window.location.href])
 
   const handleCloseNavMenu = (pages) => {
     setAnchorElNav(null);
 
     if(pages!=""){
-      return navigate(`/${pages}`)
+    
+      navigate("/home")
 
     }
   };
@@ -49,13 +85,32 @@ function Navbar() {
   const editor=useSelector(state=>state.editor)
 
 
+ 
+
+
   useEffect(()=>{
-  console.log("navbar hereeeeeeeeeeeeee")
-    dispatch(getMyId())
-  },[])
+
+    let handler=(e)=>{
+     
+      if(trigger && !myref.current.contains(e.target)){
+
+        setTrigger(false)
+      }
+
+    }
+
+    document.addEventListener("mousedown",handler)
+
+
+    return document.removeEventListener("mousedown",()=>{})
+
+  },[trigger])
 
 
 
+
+
+  
 
  
   const info=useSelector(state=>state.users)
@@ -126,7 +181,7 @@ function Navbar() {
                 horizontal: 'left',
               }}
               open={Boolean(anchorElNav)}
-              onClick={()=>{handleCloseNavMenu("")}}
+              
               sx={{
                 display: { xs: 'block', md: 'none' },
               }}
@@ -136,7 +191,11 @@ function Navbar() {
                   <Typography textAlign="center">{page}</Typography>
                 </MenuItem>
               ))}
+
+
+           
             </Menu>
+            
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
@@ -147,7 +206,7 @@ function Navbar() {
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
-              flexGrow: 1,
+              flexShrink: 1,
               fontFamily: 'monospace',
               fontWeight: 700,
               letterSpacing: '.3rem',
@@ -157,6 +216,9 @@ function Navbar() {
           >
             STORYBOOK
           </Typography>
+
+        
+         
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
@@ -174,25 +236,26 @@ function Navbar() {
 {
   info.loading?"loading....":<div className="notification" style={{position:"relative"}}>
 
-  <div className="notCount" style={{backgroundColor:"red",color
+  <div  className="notCount" style={{backgroundColor:"red",color
 :"white",position:"absolute",top:"0",zIndex:"2"}}>{info.userId.notiCount!=0?info.userId.notiCount:null}</div>
 <Tooltip title="Open settings">
     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-      <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+      {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" /> */}
+      <CircleNotificationsIcon  fontSize='large'/>
     </IconButton>
   </Tooltip>
 
 
 {
-  trigger? <div className="notiMenu" style={{backgroundColor:"white",width:"300%",position:"absolute",left:"-200%",bottom:"-500%",height:"12rem",border:"1px solid yellow",overflowY:"scroll"}}>
+  trigger? <div ref={myref}  className="notiMenu" style={{padding:"0.5rem",backgroundColor:"white",width:"300%",position:"absolute",left:"-200%",bottom:"-500%",height:"12rem",border:"1px solid yellow",overflowY:"scroll"}}>
   {
     info.loading?"no new notifications":
-   info.userId && info.userId.notifications && info.userId.notifications.length>0? info.userId.notifications.map((item,index)=>{
+   info.userId && info.userId.notifications && info.userId.notifications.length>0? info.userId.notifications.slice(0,11).map((item,index)=>{
 
 
       console.log(item)
 
-      return <div onClick={()=>{clickHandler(item.postid,item.format,item.audid,item._id)}} style={{color:item.seen=="no"?"black":"#d3d3d3",cursor:"pointer"}}>{item.format=="audiosNoti"?"new audio for your script":"you have been tagged"}</div>
+      return <div onClick={()=>{clickHandler(item.postid,item.format,item.audid,item._id)}} style={{color:item.seen=="no"?"black":"#d3d3d3",cursor:"pointer",marginBottom:"0.3rem"}}>{item.format=="audiosNoti"?"new audio for your script":"you have been tagged"}</div>
     }):"no new notifications"
   }
 </div>:null
@@ -203,6 +266,8 @@ function Navbar() {
 
 </div>
 }
+
+        
           
             
             <Menu

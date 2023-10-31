@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useCallback} from 'react'
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import styled from 'styled-components';
@@ -17,7 +17,13 @@ import { getSingleData,getSingleAudio,RemoveFavouriteAudio,updateLikeStatus } fr
 import { addReply } from '../../../../store/comment-slice';
 import { changeLikeStatus } from '../../../../store/editor-slice';
 import { useEffect } from 'react';
-import { Tooltip } from '@mui/material';
+import { CircularProgress, Tooltip } from '@mui/material';
+ import { url } from '../../../../url';
+ import axios from "axios"
+ import { AllComments } from '../../../../store/comment-slice';
+
+ import UseLocalStorage from '../../../../hooks/UseLocalStorage';
+import { render } from 'react-dom';
 const CardFooterWrapper=styled.div`
      width:100%;
      padding:0rem 0.5rem;
@@ -26,21 +32,27 @@ const CardFooterWrapper=styled.div`
 
     
     `
-function CardFooter({summary,postFormat,pos,type,postId,userId,body,postType,likes,dislikes,isFav,authId,comId,isLiked,isDisliked}) {
+function CardFooter({fromPost,summary,postFormat,pos,type,postId,userId,body,postType,likes,dislikes,isFav,authId,comId,isLiked,isDisliked}) {
+ console.log("back again")
+  const {setLoggedInUser,getLoggedInUser}=UseLocalStorage();
 
   const user=useSelector(state=>state.users)
   const editors=useSelector(state=>state.editor)
   const navigate=useNavigate()
   const dispatch=useDispatch()
 const [currId,setCurrId]=React.useState(false)
-
+const [likeInfo,setLikeInfo]=useState(false)
 const [reply,setReply]=React.useState("")
+const [info,setRender]=React.useState(0)
+
+
+const [data,setData]=useState("")
 
   const clickHandler=(card)=>{
-    if(card=="save"){
+    if(card=="save" && postId){
       return navigate(`/updateEdit/${postId}`)
-    }else if(card=="Fav"){
-      return navigate(`/record/${postId}`)
+    }else if(card=="Fav" && fromPost){
+      return navigate(`/record/${fromPost}`)
     }
     
 
@@ -63,6 +75,8 @@ const [reply,setReply]=React.useState("")
     console.log(data)
 
     dispatch(addReply(data))
+    .then(()=> dispatch(AllComments({postId})))
+   
 
   }
 
@@ -89,7 +103,8 @@ const [reply,setReply]=React.useState("")
         audId:postId
       }
   dispatch(AddFavouriteAudio(data))
-  dispatch(getSingleAudio({audioId:postId}))
+  .then(()=>{dispatch(getSingleAudio({audioId:postId}))})
+  
     }else{
 
       const data={
@@ -103,7 +118,8 @@ const [reply,setReply]=React.useState("")
 
       console.log(data,"8888888888888888")
       dispatch(AddFavourite(data))
-        dispatch(getSingleData({id:postId}))
+      .then(()=>{dispatch(getSingleData({id:postId}))})
+        
 
     }
    
@@ -124,8 +140,9 @@ const [reply,setReply]=React.useState("")
 
       console.log("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk99999")
   dispatch(RemoveFavouriteAudio(data))
+  .then(()=>dispatch(getSingleAudio({audioId:postId})))
 
-  dispatch(getSingleAudio({audioId:postId}))
+  
 
     }else{
 
@@ -137,7 +154,8 @@ const [reply,setReply]=React.useState("")
 
       console.log(data,"8888888888888888")
       dispatch(removeScriptFav(data))
-      dispatch(getSingleData({id:postId}))
+      .then(()=>{ dispatch(getSingleData({id:postId}))})
+     
 
     }
    
@@ -151,7 +169,8 @@ const [reply,setReply]=React.useState("")
 
 
     dispatch(deleteSave(data))
-    dispatch(getMyPosts(data))
+    .then(()=>{dispatch(getMyPosts(data))})
+    
 
 
   }
@@ -165,41 +184,171 @@ const [reply,setReply]=React.useState("")
 
     setCurrId(!currId)
   }
+
+
+
+  useEffect(()=>{
+
     
-   const likeHandler=()=>{
 
-    const data={
-      postid:postType=="comments"?comId:postId,
-      form:"like",
-      postType
+      const fun=async()=>{
 
+   
+        const details={
+          postid:postType=="comments"?comId:postId,
+           type:postType
+    
+    
+        }
+  
+             console.log(details,"look here")
+        setLikeInfo(true)
+  
+    
+        const token=getLoggedInUser();
+        const myPosts=await axios.post(`${url}/likedAndNumbers`,details,{
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })    
+  
+        console.log(myPosts.data)
+        setData(myPosts.data)
+  
+        setLikeInfo(false)
+  
+      }
+
+      if(postId || comId){
+        fun();
+      }
+      
+    },[postId,comId])
+   
+
+  
+    
+    
+
+
+
+  
+    
+  
+    const likeHandler=async()=>{
+
+      try{
+
+        const details={
+          postid:postType=="comments"?comId:postId,
+          form:"like",
+          postType
+    
+    
+        }
+  
+       
+        setLikeInfo(true)
+  
+    
+        const token=getLoggedInUser();
+        const myPosts=await axios.post(`${url}/AddLikes`,details,{
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })    
+    
+        // console.log(myPosts.data)
+        setLikeInfo(false)
+        console.log("kkkkkkkkkkkkkkk")
+      }
+      catch(err){
+        console.log(err,"dekhte hain")
+      }
+
+     
+
+
+     
+      // dispatch(AddLikes(data))
+      //   .then(()=>{console.log("i am dispatched")})
+      
+  
+  
+     }
+
+     
+
+  
+   
+
+  useEffect(()=>{
+
+    const details= async()=>{
+
+      let data={
+        type:postType,
+        postid:postType=="comments"?comId:postId,
+      }
+      const token=getLoggedInUser();
+
+
+      setLikeInfo(true)
+      const argu=await axios.post(`${url}/likedAndNumbers`,data,{
+        headers:{
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      }
+      })
+
+      console.log(argu.data,"finallll")
+      setData(argu.data)
+      setLikeInfo(false)
 
     }
-
-    
-
-    dispatch(AddLikes(data))
-      .then(()=>{console.log("i am dispatched")})
-    
-
-
-   }
-
-   const unlikeHandler=()=>{
-
-    const data={
-      postid:postType=="comments"?comId:postId,
-      form:"dislike",
-      postType
-
-
+   
+    if(info>0){
+      details()
     }
     
-    console.log(data,postId,"insideunlike")
-    dispatch(AddLikes(data))
-    .then(()=>{console.log("i am dispatched")})
-    
-   }
+
+
+  },[info])
+
+  
+
+    const unlikeHandler=async()=>{
+
+      const data={
+        postid:postType=="comments"?comId:postId,
+        form:"dislike",
+        postType
+  
+  
+      }
+        
+      setLikeInfo(true)
+      const token=getLoggedInUser();
+      const myPosts=await axios.post(`${url}/AddLikes`,data,{
+          headers:{
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+          }
+      })    
+          
+      setLikeInfo(false)
+      // console.log(data,postId,"insideunlike")
+      // dispatch(AddLikes(data))
+      // .then(()=>{console.log("i am dispatched")})
+      
+     }
+
+
+
+
+   
 
 //    useEffect(()=>{
 
@@ -217,7 +366,7 @@ const [reply,setReply]=React.useState("")
     <CardFooterWrapper type={type}>
 
 
-
+   <button onClick={()=>{console.log(postId)}}>click abhi</button>
 
 
       {
@@ -225,7 +374,7 @@ const [reply,setReply]=React.useState("")
 
         <Tooltip title="Delete the scripy">
         <DeleteIcon style={{marginRight:"0.5rem",color:"#587b7f",cursor:"pointer"}} onClick={deleteHandler}/>
-
+   
         </Tooltip>
 
         <Tooltip title="Edit the script">
@@ -235,9 +384,16 @@ const [reply,setReply]=React.useState("")
         
         </>:
         <>
+         
+        {
+          likeInfo?<CircularProgress size="2rem"/>:<>
+          <span style={{color:"#587b7f"}}>{data.totalLikes}</span>< ThumbUpIcon style={{marginRight:"0.5rem",color:data.presentLike?"green":"#587b7f",cursor:"pointer"}} onClick={()=>{likeHandler().then(()=>{setRender(no=>no+1)})}}/>
+          <span style={{color:"#587b7f"}}>{data.totlaDisLikes}</span><ThumbDownIcon style={{marginRight:"1rem",color:data.presentDislike?"green":"#587b7f",cursor:"pointer"}} onClick={()=>{unlikeHandler().then(()=>{setRender(no=>no+1)})}} />
+          
+          </>
+        }
 
-       <span style={{color:"#587b7f"}}>{likes}</span>< ThumbUpIcon style={{marginRight:"0.5rem",color:isLiked?"green":"#587b7f",cursor:"pointer"}} onClick={()=>{likeHandler()}}/>
-       <span style={{color:"#587b7f"}}>{dislikes}</span><ThumbDownIcon style={{marginRight:"1rem",color:isDisliked?"green":"#587b7f",cursor:"pointer"}} onClick={()=>{unlikeHandler()}} />
+       
 
        {
         type=="comment"?<span style={{color:"#587b7f",cursor:"pointer"}} onClick={replyHandler}>{"reply"}</span>  :<span style={{color:"#587b7f"}} onClick={moreHandler}>{"more"}</span>

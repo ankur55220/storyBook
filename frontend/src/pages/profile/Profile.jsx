@@ -46,7 +46,6 @@ function Profile() {
     <PageWrapperFullScreen>
       
 
-      
 
          <Sidebar type="profile" loading={loggedUser.loading} error={loggedUser.err} user={loggedUser.loggedInUser.user}/>
 

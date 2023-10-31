@@ -7,6 +7,112 @@ import ErrorClass from "../middleware/NewErrorClass.js";
 import { Audio } from "../model/Audio.js";
 
 
+export const searchUser=AsyncMiddleWare(
+
+    async (req,res,next)=>{
+
+        const {text}=req.body;
+
+        const AllUsers=await User.find({username:{$regex : "^" + text}})
+
+        res.status(200).json({AllUsers})
+    }
+)
+
+export const likedAndNumbers=AsyncMiddleWare(
+async (req,res,next)=>{
+
+const {id}=req.user.user;
+  const {type,postid}=req.body;
+
+  let ans={
+
+  }
+
+  const user=await User.findById(id);
+  
+ 
+  if(type=="audios"){
+
+    const found=await Audio.findById(postid)
+    if(!found){
+        return 
+    }
+    const likesThrere=user.likes.filter((item)=>item.id==found?._id);
+    const dislikesThere=user.dislikes.filter((item)=>item.id==found?._id);
+
+    if(likesThrere.length>0){
+        ans.presentLike=true;
+        ans.presentDislike=false
+    }else if(dislikesThere.length>0){
+        ans.presentLike=likesThrere.length>0;
+        ans.presentDislike=dislikesThere>0
+    }
+
+    
+    ans.totalLikes=found.likes
+    ans.totlaDisLikes=found.dislikes;
+
+
+  }else if(type=="scripts"){
+  const found=await Story.findById(postid)
+  if(!found){
+    return 
+}
+  const likesThrere=user.likes.filter((item)=>item.id==found._id);
+  const dislikesThere=user.dislikes.filter((item)=>item.id==found._id);
+
+  if(likesThrere.length>0){
+    ans.presentLike=true;
+    ans.presentDislike=false
+}else if(dislikesThere.length>0){
+    ans.presentLike=false;
+    ans.presentDislike=true
+}else{
+    ans.presentLike=likesThrere.length>0;
+    ans.presentDislike=dislikesThere.length>0
+}
+
+  
+  ans.totalLikes=found.likes
+  ans.totlaDisLikes=found.dislikes;
+
+
+
+}else if(type=="comments"){
+
+    const found=await Comment.findById(postid)
+
+
+    if(!found){
+        
+        return
+    }
+    
+
+  const likesThrere=user.likes.filter((item)=>item.id==found._id);
+  const dislikesThere=user.dislikes.filter((item)=>item.id==found._id);
+
+  if(likesThrere.length>0){
+    ans.presentLike=true;
+    ans.presentDislike=false
+}else if(dislikesThere.length>0){
+    ans.presentLike=false;
+    ans.presentDislike=true
+}else{
+    ans.presentLike=likesThrere.length>0;
+    ans.presentDislike=dislikesThere.length>0
+}
+
+  
+  ans.totalLikes=found.likes
+  ans.totlaDisLikes=found.dislikes;
+
+}
+
+res.status(200).json(ans)
+}
+)
 
 
 export const AddNewStory= AsyncMiddleWare(async (req,res,next)=>{
@@ -61,7 +167,7 @@ export const markAsSeen=AsyncMiddleWare(async (req,res,next)=>{
 
     const {postId,index}=req.body
 
-    console.log(id,"pppppppppppppppppppppp")
+
    if(!req.user.user){
        return next(new ErrorClass("You are not Logged In",401))
    }
@@ -70,7 +176,7 @@ export const markAsSeen=AsyncMiddleWare(async (req,res,next)=>{
    const user=await User.findById(id);
 
 
-   console.log(index,user.notifications,"=======================55555555555555555555555555")
+   
    const noti=user.notifications.findIndex((item)=>item._id==index)
 
 //    console.log(user,postId,"------------->>>>>>>>>>>---888")
@@ -80,10 +186,10 @@ export const markAsSeen=AsyncMiddleWare(async (req,res,next)=>{
     
    user.save()
    .then((item)=>{
-    console.log(item)
+    
    })
    .catch((err)=>{
-    console.log(err,"111111111111111111111111")
+    
    })
    
 
@@ -97,7 +203,7 @@ export const getUserId=AsyncMiddleWare(async (req,res,next)=>{
      const {id}=req.user.user
 
 
-     console.log(id,"pppppppppppppppppppppp")
+     
     if(!req.user.user){
         return next(new ErrorClass("You are not Logged In",401))
     }
@@ -116,7 +222,8 @@ export const getUserId=AsyncMiddleWare(async (req,res,next)=>{
         success:true,
         id:req.user.user.id,
         notifications:noti,
-        notiCount:notiCount.length
+        notiCount:notiCount.length,
+        img:user.profilePic
     })
 })
 
@@ -146,14 +253,18 @@ export const getAllStory=AsyncMiddleWare(async(req,res,next)=>{
 
 export const getAllpublishedStories=AsyncMiddleWare(async (req,res,next)=>{
 
-
+try{
+    console.log("llllllllllllllkkkkkkkkkkkkkkkkkkkkkkjjjjjjjjjjjjj")
     const {id}=req.user.user
 
+
     const user=await User.findById(id)
+
+    
     const publishedStories= await Story.find({status:"published"})
 
-    const likesNo=await publishedStories.map((item)=>item.likes)
-    const dislikesNo=await publishedStories.map((item)=>item.dislikes)
+    const likesNo=publishedStories.map((item)=>item.likes)
+    const dislikesNo=publishedStories.map((item)=>item.dislikes)
 
 
 
@@ -187,16 +298,7 @@ export const getAllpublishedStories=AsyncMiddleWare(async (req,res,next)=>{
 
     })
 
-    console.log({
-        success:true,
-        posts:publishedStories,
-        authors,
-        likesNo,
-        dislikesNo,
-        userLiked:liked,
-        userDisliked:disliked
-    },"9990000pppppp")
-
+   
     res.status(200).json({
         success:true,
         posts:publishedStories,
@@ -204,9 +306,16 @@ export const getAllpublishedStories=AsyncMiddleWare(async (req,res,next)=>{
         likesNo,
         dislikesNo,
         userLiked:liked,
-        userDisliked:disliked
+        userDisliked:disliked,
+        img:user.profilePic
     })
 
+
+}
+catch(err){
+    console.log(err)
+}
+    
 })
 
 
@@ -234,11 +343,12 @@ export const getpublishedById=AsyncMiddleWare(async (req,res,next)=>{
         username:user.username,
         email:user.email,
         joined:user.createdAt,
-        count:publishedCount
+        count:publishedCount,
+        img:user.profilePic
     }
 
 
-    console.log(loggedUser)
+    
 
     const logged=await User.findById(loggedUser.id)
 
@@ -308,7 +418,7 @@ export const addFavourite=AsyncMiddleWare(async (req,res,next)=>{
 
    }
 
-   console.log(data,"================")
+   
    user.Saved.push(data)
 
    await user.save()
@@ -342,7 +452,7 @@ export const AllStoriesByUser=AsyncMiddleWare(async(req,res,next)=>{
     const {id}=req.user.user;
 
 
-    console.log(id)
+    
     const user=await User.findById(id);
     if(!user){
 
@@ -359,7 +469,8 @@ export const AllStoriesByUser=AsyncMiddleWare(async(req,res,next)=>{
         username:user.username,
         email:user.email,
         joined:user.createdAt,
-        count:publishedCount
+        count:publishedCount,
+        img:user.profilePic
     }
 
    
@@ -371,7 +482,7 @@ export const AllStoriesByUser=AsyncMiddleWare(async(req,res,next)=>{
     const likesNo=AllStories.map((item)=>item.likes)
     const dislikesNo=AllStories.map((item)=>item.dislikes)
 
-    console.log(AllStories.length,"000007777777777777777777777")
+    
     if(AllStories.length==0){
 
         res.status(200).json({
@@ -425,7 +536,7 @@ export const AllStoriesByUser=AsyncMiddleWare(async(req,res,next)=>{
 
     }
 
-    console.log(data4,"finalerrrrrrrrrrrrrrrrrrrrrrrrrr")
+    
 
     res.status(200).json(data4)
 
@@ -438,7 +549,7 @@ export const storiesPublishedByUser=AsyncMiddleWare(async(req,res,next)=>{
     const {id}=req.user.user;
 
 
-    console.log("reachin here",id)
+    
     const user=await User.findById(id);
     if(!user){
 
@@ -453,7 +564,8 @@ export const storiesPublishedByUser=AsyncMiddleWare(async(req,res,next)=>{
         username:user.username,
         email:user.email,
         joined:user.createdAt,
-        count:publishedCount
+        count:publishedCount,
+        img:user.profilePic
     }
 
    
@@ -487,7 +599,7 @@ export const storiesPublishedByUser=AsyncMiddleWare(async(req,res,next)=>{
 
     })
 
-console.log(AllStories,"==================================================================")
+
 
     res.status(200).json({
         success:true,
@@ -507,10 +619,12 @@ console.log(AllStories,"========================================================
 export const getAllFav=AsyncMiddleWare(async(req,res,next)=>{
 
     const {id}=req.user.user;
-   console.log(req.user.user,"============")
+   
 
    
     const user=await User.findById(id);
+
+    
     if(!user){
 
         
@@ -525,12 +639,13 @@ export const getAllFav=AsyncMiddleWare(async(req,res,next)=>{
         username:user.username,
         email:user.email,
         joined:user.createdAt,
-        count:publishedCount
+        count:publishedCount,
+        img:user.profilePic
 
     }
 
 
-    console.log(user,"---------")
+   
 
    
 
@@ -618,7 +733,8 @@ export const getSingleStory=AsyncMiddleWare(async(req,res,next)=>{
         username:user.username,
         email:user.email,
         joined:user.createdAt,
-        count:publishedCount
+        count:publishedCount,
+        img:user.profilePic
 
     }
 
@@ -626,7 +742,7 @@ export const getSingleStory=AsyncMiddleWare(async(req,res,next)=>{
     const liked=user.likes.filter(item=>item.id==id)
     const disliked=user.dislikes.filter(item=>item.id==id)
 
-     console.log(story)
+     
     res.status(200).json({success:true,posts:[story],authors:[author],isFav:found.length>0,user:data,likes:[story.likes],dislikes:[story.dislikes],userLiked:[liked.length>0],userDisliked:[disliked.length>0]})
 
 })
@@ -637,7 +753,7 @@ export const getSingleSave=AsyncMiddleWare(async(req,res,next)=>{
     const {postId,extraId}=req.body;
   
 
-    console.log(postId,"0000")
+    
     const user=await User.findById(id)
 
     if(!user){
@@ -645,7 +761,7 @@ export const getSingleSave=AsyncMiddleWare(async(req,res,next)=>{
     }
 
     const post=user.Saved.filter((item)=>item.postId==postId);
-console.log(post,"00000000000000====================")
+
     if(post.length==0){
         return next(new ErrorClass("no favourite found",404))
     }
@@ -667,7 +783,7 @@ export const addbookmark=AsyncMiddleWare(async(req,res,next)=>{
     const {postId,bookmarks}=req.body
 
 
-    console.log(bookmarks,"=======>>>>>")
+    
 
     if(!bookmarks){
         return next(new ErrorClass("something went wrong,couldn't ass bookmark",500))
@@ -819,7 +935,7 @@ export const updateFav=AsyncMiddleWare(async(req,res,next)=>{
     
     const index=user.Saved.findIndex(item=>item.postId==postId);
 
-   console.log(user.Saved,postId)
+   
 
     if(index==-1){
         return next(new ErrorClass("no posts found",404))
@@ -839,7 +955,7 @@ export const updateFav=AsyncMiddleWare(async(req,res,next)=>{
 
 export const editSave=AsyncMiddleWare(async(req,res,next)=>{
     const {title,body,genre}=req.body;
-  console.log("working")
+  
     if(!title || !body || !genre){
 
         return next(new ErrorClass("fields cant be empty",401))
@@ -871,7 +987,7 @@ export const editSave=AsyncMiddleWare(async(req,res,next)=>{
 
 export const deleteSave=AsyncMiddleWare(async(req,res,next)=>{
     const {id}=req.body;
-  console.log("working")
+  
     if(!id){
 
         return next(new ErrorClass("something went wrong",401))
@@ -1058,6 +1174,19 @@ export const unPublishAudio=AsyncMiddleWare(async(req,res,next)=>{
 
     const updated=await Audio.findByIdAndDelete(id)
 
+    const comm=await Comment.find().populate("author",{_id:id})
+
+    
+
+    for(let item of comm){
+
+        await Comment.findByIdAndDelete(item._id)
+    }
+
+    
+
+    
+
 
     if(!updated){
         return next(new ErrorClass("no such post was found",404))
@@ -1127,7 +1256,7 @@ export const removeAudioFromFavourite=AsyncMiddleWare(async(req,res,next)=>{
      }
  
      
-     console.log(name,"======>>>>>>>>",user)
+     
      res.status(200).json({
          success:true,
          msg:"removed successful",
@@ -1147,7 +1276,7 @@ export const removeAudioFromFavourite=AsyncMiddleWare(async(req,res,next)=>{
     const {type,postid,data,audid}=req.body;
  
 
-    console.log(type,postid,data,audid)
+    
     const usersToBeNotified=await Promise.all(data.map(async(item,index)=>{
 
         let user=await User.findById(item.data.userid)
@@ -1156,7 +1285,7 @@ export const removeAudioFromFavourite=AsyncMiddleWare(async(req,res,next)=>{
     }))
 
 
-    console.log(usersToBeNotified,"jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjooooooooooooooo")
+    
 
     if(type=="audios"){
 
@@ -1175,14 +1304,37 @@ export const removeAudioFromFavourite=AsyncMiddleWare(async(req,res,next)=>{
 
             return 1
         })
+      
+        const data2={
+            format:"audiosNoti",
+            postid,
+            seen:"no",
+            audid
 
-        res.status(200).json({
+        }
+
+        const post=  await Story.findById(postid).populate("author").exec() ;
+
+        if(post){
+
+            const postUser= await User.findById(post.author._id)
+
+            postUser.notifications.unshift(data2)
+    
+            await postUser.save()
+
+        }
+       
+
+
+
+       
+    
+
+        return  res.status(200).json({
             success:true,
             msg:"sent notification"
         })
-    
-
-        return
 
 
     }else if(type=="scripts"){
@@ -1194,7 +1346,7 @@ export const removeAudioFromFavourite=AsyncMiddleWare(async(req,res,next)=>{
         }
 
         const saved= await Promise.all(usersToBeNotified.map(async(item)=>{
-            console.log(item,"@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            
 
             item.notifications.unshift(data)
 
@@ -1205,13 +1357,13 @@ export const removeAudioFromFavourite=AsyncMiddleWare(async(req,res,next)=>{
             return 1
         }))
 
-        res.status(200).json({
+      return  res.status(200).json({
             success:true,
             msg:"sent notification"
         })
     
 
-        return
+        
 
 
     }
@@ -1234,7 +1386,7 @@ export const AddAudioNotify=AsyncMiddleWare(async(req,res,next)=>{
 
 
 
-    console.log(userToBeNotified[0],postid,"qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
+    
     // const data={
     //     format:"audiosNoti",
     //     audid,
@@ -1244,7 +1396,7 @@ export const AddAudioNotify=AsyncMiddleWare(async(req,res,next)=>{
         
     // }
 
-    const user=await User.findByIdAndUpdate(userToBeNotified[0].authorId,{$push:{
+    const user=await User.findByIdAndUpdate(userToBeNotified[0].author,{$push:{
         notifications:{
             $each:[{
                 format:"audiosNoti",
@@ -1716,20 +1868,23 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
     const {id}=req.user.user
 
     const {postid,form,postType}=req.body;
+
     
+    
+   let zerolike=true;
+   let zeroDislike=true
 
     const user=await User.findById(id)
 
     const likes=user.likes.filter((item)=>item.id==postid)
     const dislikes=user.dislikes.filter((item)=>item.id==postid)
     
-
-    console.log(postid,form,postType,likes,dislikes,"++++++++++++++++++++++++++")
     
+        
 
         if(likes.length==0 && dislikes.length==0){
 
-            console.log("audios","LLLLLLLLLLLLLLLLLLLL")
+
             if(postType=="audios"){
 
                 if(form=="like"){
@@ -1739,9 +1894,11 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
                      }},{new:true})
      
 
-                     console.log(updated,"plzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz")
+                     
                      const audioupdate=await Audio.findByIdAndUpdate(postid,{$inc:{likes:1}},{new:true})
-                     console.log(audioupdate,"audios","LLLLLLLLLL00000LLLLLLLLLL")
+                     
+
+                     zerolike=false;
                 }else if (form=="dislike"){
 
                     const updated = await User.findByIdAndUpdate(id,{$push:{
@@ -1750,6 +1907,7 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
                      }},{new:true})
      
                      const audioupdate=await Audio.findByIdAndUpdate(postid,{$inc:{dislikes:1}},{new:true})
+                     zerolike=false;
 
                 }
 
@@ -1767,11 +1925,17 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
                         
                      }},{new:true})
                      
+
+                     
      
                      const audioupdate=await Story.findByIdAndUpdate(postid,{$inc:{likes:1}},{new:true})
                     
+
+                     zerolike=false;
    
                 }else if(form=="dislike"){
+                    
+                
 
                     const updated = await User.findByIdAndUpdate(id,{$push:{
                         dislikes:{id:postid}
@@ -1779,7 +1943,8 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
                      }},{new:true})
      
                      const audioupdate=await Story.findByIdAndUpdate(postid,{$inc:{dislikes:1}},{new:true})
-
+                       
+                     zeroDislike=false
                 }
                 
         
@@ -1796,6 +1961,7 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
                  },{new:true})
  
                  const audioupdate=await Comment.findByIdAndUpdate(postid,{$inc:{likes:1}},{new:true})
+                 zerolike=false;
 
             }else if(form=="dislike"){
                 const updated = await User.findByIdAndUpdate(id,{$push:{
@@ -1804,7 +1970,7 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
                  },{new:true})
  
                  const audioupdate=await Comment.findByIdAndUpdate(postid,{$inc:{dislikes:1}},{new:true})
-
+                zeroDislike=0
 
             }
                 
@@ -1814,8 +1980,9 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
             }
 
             
-        }else if(likes.length>0){
+        }else if(likes.length>0 && zerolike){
 
+            
             
            if(form=="like"){
 
@@ -1908,7 +2075,7 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
         
 
 
-
+        zeroDislike=false;
 
             }else if (postType=="scripts"){
                 const updated = await User.findByIdAndUpdate(id,{$pull:{
@@ -1925,7 +2092,7 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
 
 
 
-                 console.log(id,"000000000999999998888888")
+                 
             const updated2= await User.findByIdAndUpdate(id,{$push:{
                     dislikes:{id:postid}
                  }},{new:true})
@@ -1973,8 +2140,9 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
 
 
 
-        }else if(dislikes.length>0){
+        }else if(dislikes.length>0 && zeroDislike){
 
+            
 
             if(form=="like"){
 
@@ -2017,7 +2185,7 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
                      }},{new:true})
 
                      
-    console.log("kkkkkkkkkkkkkkkkkkkk[",postid)
+    
     
                const audioupdate=await Story.findByIdAndUpdate(postid,{$inc:{likes:1}},{new:true})
                const audioupdate2=await Story.findByIdAndUpdate(postid,{$inc:{dislikes:-1}},{new:true})
@@ -2110,13 +2278,15 @@ export const AddLikes=AsyncMiddleWare(async(req,res,next)=>{
 
     
 
-   
+       const newNumbers=await User.findById(id);
 
 
 
     res.status(200).json({
         success:true,
         msg:'successfully appreciated',
+        likes:newNumbers.likes,
+        dislikes:newNumbers.dislikes,
         postType
     })
 

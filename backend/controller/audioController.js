@@ -85,7 +85,8 @@ export const getAllAudios=AsyncMiddleWare(async (req,res,next)=>{
       username:user.username,
       email:user.email,
       joined:user.createdAt,
-      count:publishedCount
+      count:publishedCount,
+      img:user.profilePic
   }
 
   const logged=await User.findById(id)
@@ -144,7 +145,8 @@ export const getAllAudiosBy=AsyncMiddleWare(async (req,res,next)=>{
       username:user.username,
       email:user.email,
       joined:user.createdAt,
-      count:publishedCount
+      count:publishedCount,
+      img:user.profilePic
   }
 
   const logged=await User.findById(id)
@@ -287,7 +289,8 @@ export const AddfavAudio=AsyncMiddleWare(async (req,res,next)=>{
       username:user.username,
       email:user.email,
       joined:user.createdAt,
-      count:publishedCount
+      count:publishedCount,
+      img:user.profilePic
   }
 
     res.status(200).json({
@@ -362,7 +365,8 @@ const disliked = allAudios.map((item)=>{
       username:user.username,
       email:user.email,
       joined:user.createdAt,
-      count:publishedCount
+      count:publishedCount,
+      img:user.profilePic
   }
 
     res.status(200).json({
@@ -389,14 +393,17 @@ export const getSingleAudio=AsyncMiddleWare(async(req,res,next)=>{
 
 
   const audio=await Audio.findById(audioId)
+
+  if(!audio){
+    console.log("0ppppppppppppppppppppppppiiiiiiiiiiiiiiiiiiiiiiiiii")
+    return res.json({state:"deleted"})
+  }
 const user=await User.findById(id)
 
 const isFav=user.favAudio.filter((item)=>item.audId==audioId);
 const publishedCount=await Story.find({$and:[{author:id},{status:"published"}]}).count();
 
-  if(!audio){
-    return next(new ErrorClass("no such audio found",404))
-  }
+  
 
 
   const author=await User.findById(audio.author)
@@ -408,7 +415,8 @@ const publishedCount=await Story.find({$and:[{author:id},{status:"published"}]})
     username:user.username,
     email:user.email,
     joined:user.createdAt,
-    count:publishedCount
+    count:publishedCount,
+    img:user.profilePic
 }
 
   if(!user){

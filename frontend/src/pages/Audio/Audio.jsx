@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React,{useEffect,useState} from 'react'
 import { PageWrapper } from '../../universal'
 import styled from 'styled-components'
 import Card from '../../component/Cards/Card'
@@ -12,7 +12,7 @@ import { getSingleAudio,changeNavTrigger } from '../../store/editor-slice'
 import { getMyId } from '../../store/user-slice'
 import { useLocation } from 'react-router-dom'
 import { changeSeen } from '../../store/editor-slice'
-
+import {Alert} from '@mui/material'
 const PageWrapperWithFlexStart=styled(PageWrapper)`
     
 align-items:flex-start;
@@ -75,7 +75,7 @@ function Audio() {
     }
   },[editdata.likeStatus])
 
-  const [err,setErr]=useSEtate(true)
+  const [err,setErr]=useState(true)
   const [right,setRight]=useState(false)
 
   useEffect(()=>{
@@ -122,7 +122,8 @@ if(editdata.err!=""){
   dislikesNo={editdata.backendEditdata.dislikes}
   userLiked={editdata.backendEditdata.userLiked}
   userDisliked={editdata.backendEditdata.userDisliked}
-    name={editdata.backendEditdata.user.username}
+    name={editdata?.backendEditdata?.user?.username}
+    state={editdata?.backendEditdata?.state}
     bg="white" 
     rad="10px" 
     post="post" 
@@ -130,11 +131,11 @@ if(editdata.err!=""){
    }
 
 {
-  editdata.backendEditdata.posts?<audio src={editdata.backendEditdata.posts[0].audio} controls/> :<CircularProgress/>
+  editdata.backendEditdata.state?null:editdata.backendEditdata.posts?<audio src={editdata.backendEditdata.posts[0].audio} controls/> :<CircularProgress/>
 }
 
           
-           <Comments mt="1.5rem" postId={id}/>
+           <Comments mt="1.5rem" state={editdata.backendEditdata.state} comType="audios" postId={id}/>
            
 
         </PostWrapper>

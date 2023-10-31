@@ -11,6 +11,7 @@ import { useState } from 'react'
 const CardWrapper=styled.div`
     
      width:100%;
+     
      border-bottom:1px solid #D3D3D3;
      font-family: Lato, sans-serif;
      margin-bottom:1.2rem;
@@ -19,18 +20,14 @@ const CardWrapper=styled.div`
      border-radius:${props=>props.rad?props.rad:""};
 
     `
-function Card({postFormat,bg,rad,post,img,name,posts,authors,user,postType,noMenu,isFav,audId,likesNo,dislikesNo,userLiked,userDisliked}) {
+function Card({OtherId,comingFromPost,state,postFormat,bg,rad,post,img,name,posts,authors,user,postType,noMenu,isFav,audId,likesNo,dislikesNo,userLiked,userDisliked}) {
 
 
-  console.log(posts,user)
+  console.log(posts,user,postFormat,postType,"here from card")
   const usersInfo=useSelector((state)=>state.users)
     
 
-  useEffect(()=>{
-
-    console.log(posts)
-  },[posts])
-
+  
 
 
  
@@ -40,9 +37,14 @@ function Card({postFormat,bg,rad,post,img,name,posts,authors,user,postType,noMen
 
     <>
 
+
+
+
     {
 
 posts && posts.length>0?
+
+postType=="scripts" && posts[0].status=="unpublished" && post?<h3>post was deleted</h3>:
       
 posts.map((item,idx)=>{
 
@@ -59,14 +61,15 @@ posts.map((item,idx)=>{
           <CardHead 
           postType={postType} 
           noMenu={noMenu} 
+          profileType={post}
           text={usersInfo.save} 
-          img={img} 
-          name={authors[0].username} 
+          img={post&&post=="Othersprofile"?user.img:authors[0].profilePic} 
+          name={post&&post=="Othersprofile"?user.username:authors[0].username} 
           audId={usersInfo.save!="save" && postType=="audios"?item._id:undefined} 
           postId={usersInfo.save=="Fav" && postType!="audios"?item.postId:item._id} 
           userId={authors[0]._id}/>
           {
-            usersInfo.save=="save"? <CardTitle title={item.title}/>:<CardBody body={item.summary} />
+            usersInfo.save=="save"? <CardTitle title={item.title} genre={item.genre}/>:<CardBody genre={item.genre} body={item.summary} />
             
           }
          
@@ -79,6 +82,7 @@ posts.map((item,idx)=>{
           postType={postType} 
           pos={post?post:""} 
            body={item.body}
+           fromPost={comingFromPost}
            postId={usersInfo.save=="Fav" && postType!="audios"?item.postId:item._id} 
            authId={item.author}
            userId={authors[0]._id}
@@ -99,10 +103,11 @@ posts.map((item,idx)=>{
             <CardWrapper bg={bg} rad={rad}>
           <CardHead 
           postType={postType} 
+          profileType={post}
           noMenu={noMenu} 
           text={usersInfo.save} 
-          img={img} 
-          name={authors[idx].username} 
+          img={post&&post=="Othersprofile"?user.img:authors[idx].profilePic} 
+          name={post&&post=="Othersprofile"?user.username:authors[idx].username} 
           audId={usersInfo.save=="Fav" && postType=="audios"?item._id:undefined} 
           postId={usersInfo.save=="Fav" && postType!="audio"?item.postId:item._id} 
           userId={authors[idx]._id}/>
@@ -119,6 +124,7 @@ posts.map((item,idx)=>{
           postType={postType} 
           pos={post?post:""} 
           postId={usersInfo.save=="Fav" && postType!="audios"?item.postId:item._id} 
+          fromPost={comingFromPost}
           userId={authors[idx]._id} 
           body={item.body}
           likes={likesNo[idx]}
@@ -140,11 +146,11 @@ posts.map((item,idx)=>{
 
    
       }):
-      <h2>"no post yet"</h2>
+      <h2>{state?"post has been deleted":"no post yet"}</h2>
     }
     
     </>
   )
 }
 
-export default Card
+export default React.memo(Card)

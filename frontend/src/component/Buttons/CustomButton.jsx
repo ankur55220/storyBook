@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-function CustomButton({content,padding,width,translate,left,size,fun}) {
+function CustomButton({content,padding,width,translate,left,size,fun,disable}) {
 
 const CusBtns=styled.button`
 
@@ -13,7 +13,7 @@ display:inline-block;
 width:${width?width:"100%"};
 padding:${padding?padding:"1rem 2rem"};
 color:#ffff;
-background-color:#${(props) => props.theme.colors.btn_bg_light};
+background-color:#${(props) =>props.disabled? "grey": props.theme.colors.btn_bg_light};
 font-size:${size?size:"1rem"};
 margin-left:${left?left:"0"};
 transform:translateY(${translate?translate:"0"});
@@ -23,7 +23,7 @@ cursor:pointer;
   return (
     <>
     
-    <CusBtns onClick={fun}>{content}</CusBtns>
+    <CusBtns disabled={disable} onClick={fun}>{content}</CusBtns>
     </>
   )
 }

@@ -60,11 +60,7 @@ function Container({width,loading,error,posts,authors,user,type,postType,typeOf,
   const editInfo=useSelector(state=>state.editor)
   const dispatch=useDispatch()
 
-useEffect(()=>{
 
-  console.log(loading,error,posts,authors,user,"klkkwj")
-
-},[error,posts,authors,user])
 
 const [postType1, setPostType1] = React.useState('scripts');
 
@@ -78,7 +74,7 @@ const handleChange = (event) => {
 
 
 
-  0
+  
 };
 
 
@@ -96,9 +92,9 @@ useEffect(()=>{
   }else if(!typeOf && typeOf!="Othersprofile" && editInfo.active=="audios" && details.save=="published"){
     dispatch(getMyAudio())
   }else if(!typeOf && typeOf!="Othersprofile" && editInfo.active=="scripts" && details.save=="Fav"){
-     dispatch(getMyFav(dummy))
+     dispatch(getMyFav())
   }else if(!typeOf && typeOf!="Othersprofile" && editInfo.active=="scripts" && details.save=="published"){
-    dispatch(getMyPublished(dummy))
+    dispatch(getMyPublished())
   }
 
 
@@ -132,10 +128,10 @@ useEffect(()=>{
       dispatch(getMyAudio())
       .then(()=>dispatch(getFalse()))
     }else if(!typeOf && typeOf!="Othersprofile" && editInfo.active=="scripts" && details.save=="Fav"){
-       dispatch(getMyFav(dummy))
+       dispatch(getMyFav())
        .then(dispatch(getFalse()))
     }else if(!typeOf && typeOf!="Othersprofile" && editInfo.active=="scripts" && details.save=="published"){
-      dispatch(getMyPublished(dummy))
+      dispatch(getMyPublished())
       .then(()=>dispatch(getFalse()))
     }
 
@@ -149,7 +145,6 @@ useEffect(()=>{
         <Title title="Latest Posts"/>
 
        
-
 
        <ContainerBody>
        <ShortMsg>
@@ -199,6 +194,8 @@ useEffect(()=>{
           dislikesNo={dislikesNo}
           userLiked={userLiked}
           userDisliked={userDisliked}
+          post={typeOf}
+        
 
 
           />

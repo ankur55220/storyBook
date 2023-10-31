@@ -20,7 +20,7 @@ export const RegisterController=AsyncMiddleWare(
 
        const user= await User.findOne({email:email});
        
-       console.log(user,"here")
+       
        if(user){
         return res.status(401).json({
             success:false,
@@ -55,7 +55,7 @@ export const RegisterController=AsyncMiddleWare(
    await newUser.save()
     
 
-    console.log("gggggg")
+    
        return res.status(200).json({
         success:true,
         msg:"successfully registered"
@@ -108,4 +108,33 @@ export const LoginController=AsyncMiddleWare(
         return res.status(200).json({success:true,msg:"logedIn success",token,id:currUser._id})
 
     }
+)
+
+
+export const imageUpload =AsyncMiddleWare(
+
+ async (req,res,next)=>{
+
+   const {url,id}=req.body
+
+   
+
+   const found=await User.findOne({email:id});
+
+   if(!found){
+
+    return next(new ErrorClass("couldnt find user"))
+   }
+
+   const update=await User.findOneAndUpdate({email:id},{profilePic:url},{new:true})
+
+   
+
+   return res.status(200).json({success:true,msg:"updated successfully",url:update.profilePic})
+
+
+
+
+ }
+
 )

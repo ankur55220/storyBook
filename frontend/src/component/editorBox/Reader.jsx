@@ -390,7 +390,9 @@ console.log(selectedText)
     hook.current.scrollTop = hook.current.scrollTop;
   };
 
-  const removeBookmark = (start,end) => {
+  const removeBookmark = (end,start) => {
+
+    console.log(start,end,"timings")
     // const end = EditorState.moveSelectionToEnd(editor).getSelection().getAnchorOffset();
     // const key = editor.getSelection().getAnchorKey();
 

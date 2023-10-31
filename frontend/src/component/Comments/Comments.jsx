@@ -31,7 +31,7 @@ align-items:center;
 `
 
 
-function Comments({mt,comType,postId}) {
+function Comments({mt,comType,postId,state}) {
 
    const dispatch=useDispatch()
   const [value,Form,setValue]=UseForm({
@@ -40,6 +40,7 @@ function Comments({mt,comType,postId}) {
     placeholder:"write your comment here"
 })
     
+const [num,SetNum]=useState(0)
 const parents=useSelector(state=>state.comment)
 const editor=useSelector(state=>state.editor)
 
@@ -55,6 +56,8 @@ const AddComment=()=>{
 
   dispatch(AddComments(data))
 
+  SetNum(no=>no+1)
+
 }
 
     // const parents=comments.filter((item)=>item.parent==-1)
@@ -68,13 +71,13 @@ const AddComment=()=>{
 
     useEffect(()=>{
 
-       if(editor.typeOfPost!=""){
+    
         dispatch(AllComments({postId}))
-         .then(()=>dispatch(getFalse()))
-       }
+         
+       
       
 
-    },[editor.typeOfPost])
+    },[num])
 
 
     
@@ -85,13 +88,13 @@ const AddComment=()=>{
     
         <PostCommentBox>
            {Form}
-           <CustomButton content="post" width="10%" left="1rem" padding="0.5rem 0.2rem" translate="-4.5px" fun={AddComment}/>
+           <CustomButton disable={state?true:false} content="post" width="10%" left="1rem" padding="0.5rem 0.2rem" translate="-4.5px" fun={AddComment}/>
         </PostCommentBox>
         
         {
           parents.loading?<CircularProgress/>:
           <Comment 
-          parents={parents.comments.allComments.filter(item=>item.parent=="-1")} 
+          parents={parents?.comments?.allComments?.filter(item=>item.parent=="-1")} 
           authors={parents.comments.authors}
           comlikes={parents.comments.likesNo}
           comdislikes={parents.comments.dislikesNo}

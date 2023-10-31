@@ -93,6 +93,7 @@ function Othersprofile() {
 
   return (
     <PageWrapperFullScreen>
+
         <Sidebar type="Othersprofile" loading={loggedUser.loading} error={loggedUser.err} user={loggedUser.loggedInUser.user}/>
         <Container 
         postType={editinfo.active} 
@@ -101,7 +102,7 @@ function Othersprofile() {
         error={loggedUser.err} 
         posts={loggedUser.loggedInUser.posts} 
         authors={loggedUser.loggedInUser.posts} 
-        
+      
         user={loggedUser.loggedInUser.user}
         likesNo={loggedUser.loggedInUser.likesNo}
         dislikesNo={loggedUser.loggedInUser.dislikesNo}

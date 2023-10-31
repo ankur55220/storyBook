@@ -87,7 +87,7 @@ const clickHandler=()=>{
     </Box>
 
 
-        <Editor1 type="read"/>
+        <Editor1 type="read" />
 {
   editorData.loading?<CircularProgress />:null
 }

@@ -11,7 +11,7 @@ const initialState={
     editorData:"",
     msg:"",
     err:"",
-    loading:true,
+    loading:false,
     backendEditdata:"",
     edited:false,
     homeData:"",
@@ -27,7 +27,7 @@ const {setLoggedInUser,getLoggedInUser}=UseLocalStorage();
 
 export const getFalse=createAsyncThunk(
 
-"false/save",
+"Editor/false",
     async(_,{rejectWithValue})=>{
         try{
 
@@ -305,26 +305,35 @@ export const getNameAndId=createAsyncThunk(
 
 export const getAllPublished=createAsyncThunk(
 
-    "AllPublished",
-    async(_,{rejectWithValue})=>{
+    "Editor/AllPublished",
+    async(txt,{rejectWithValue})=>{
         try{
 
-            console.log("asdafefmmmmmmmmm")
+            console.log(txt)
             const token=getLoggedInUser();
-            const myPosts=await axios.get(`${url}/getAllpublishedStories`,{
+
+            console.log("asdafefmmmmmmmmm",token)
+            const myPosts=await axios.get(`${url}/getAllPublishedStories`,{
                 headers:{
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 }
             })
           
-            const data=await myPosts.data;
+            const data=myPosts.data;
 
             console.log(data,"published888888888")
             return data
         }
-        catch(err){
-             console.log(err)
+        catch(error){
+
+            const message= (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+              console.log(message)
+             console.log(error)
             return rejectWithValue(err.response.data.error)
         }
     }
@@ -665,12 +674,13 @@ extraReducers:(builder)=>{
 
 
     builder.addCase(getAllPublished.pending,(state,action)=>{
-        state.loading=true,
-        state.msg="",
+        state.loading=true
+        state.msg=""
         state.err=""
+
       
         
-
+  console.log("pending")
         
 
     })
@@ -688,7 +698,7 @@ extraReducers:(builder)=>{
         state.typeOfPost=""
         
 
-    
+        console.log("fulfilled",action.payload," ",state.loading)
 
         
     })
@@ -699,7 +709,7 @@ extraReducers:(builder)=>{
         state.err=action.payload
        
         
-
+        console.log("rejected")
         
 
 

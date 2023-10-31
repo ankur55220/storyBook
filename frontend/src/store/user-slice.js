@@ -6,7 +6,7 @@ import { url } from "../url";
 
 
 const initialState={
-    loading:true,
+    loading:false,
     loggedInUser:"",
     msg:"",
     err:"",
@@ -16,12 +16,73 @@ const initialState={
     myfav:[],
     save:"",
     userId:"",
+    img:"",
+    activePage:""
     
 }
 
 
 
 const {setLoggedInUser,getLoggedInUser}=UseLocalStorage();
+
+export const uploadImg=createAsyncThunk(
+    'users/uploadImage',
+    async (userdetails,{rejectWithValue})=>{
+
+        try{
+            const token=getLoggedInUser();
+
+           const  response=await axios.post(`${url}/uploadImg`,userdetails,{
+            headers:{
+                'Authorization': `Bearer ${token}`,
+                    'Accept'       : 'application/json'
+
+            }
+           })
+
+          
+
+           const finalRes=await response.data;
+
+           return finalRes
+        }
+        catch(err){
+            console.log(err)
+           return  rejectWithValue(err.response.data.error)
+        }
+
+    }
+)
+
+
+export const addNewNotify=createAsyncThunk(
+    'users/addNewNot',
+    async (userdetails,{rejectWithValue})=>{
+
+        try{
+            const token=getLoggedInUser();
+
+           const  response=await axios.post(`${url}/addnewnotify`,userdetails,{
+            headers:{
+                'Authorization': `Bearer ${token}`,
+                    'Accept'       : 'application/json'
+
+            }
+           })
+
+          
+
+           const finalRes=await response.data;
+
+           return finalRes
+        }
+        catch(err){
+            console.log(err)
+           return  rejectWithValue(err.response.data.error)
+        }
+
+    }
+)
 
 export const loginUser=createAsyncThunk(
     'users/loginUserStatus',
@@ -56,10 +117,12 @@ export const unPublishAudio=createAsyncThunk(
             const token=getLoggedInUser();
             const  loginAction=await axios.post(`${url}/unPublishAudio`,userdetails,{
                 headers:{
-                    'Authorization': `Bearer ${token}`,
-                    'Accept'       : 'application/json'
+                    'Authorization':`Bearer ${token}`,
+                    'Accept'       :'application/json'
                 }
             });
+
+            
             const data=await loginAction.data;
              return data;
 
@@ -476,7 +539,10 @@ const userSlice= createSlice({
             state.err=""
     
     
-        } 
+        },
+        setActivePage(state,action){
+            state.activePage=action.payload
+        }
 
     }    ,
     extraReducers:(builder)=>{
@@ -528,6 +594,30 @@ const userSlice= createSlice({
         builder.addCase(registerUser.rejected,(state,action)=>{
 
             console.log(action,"please work")
+            state.loading=false
+            state.msg=""
+            state.err=action.payload
+            state.save=""
+        })
+
+        builder.addCase(registerUser.pending,(state,action)=>{
+            state.loading=true,
+            state.msg=""
+            state.save=""
+        })
+       
+
+        builder.addCase(addNewNotify.fulfilled,(state,action)=>{
+            state.loading=false
+    
+            state.msg="successfully followed"
+
+            
+        })
+
+        builder.addCase(addNewNotify.rejected,(state,action)=>{
+
+            
             state.loading=false
             state.msg=""
             state.err=action.payload
@@ -840,6 +930,35 @@ builder.addCase(removeScriptFav.rejected,(state,action)=>{
    
 })
 
+builder.addCase(uploadImg.pending,(state,action)=>{
+    state.loading=true
+    state.msg=""
+    
+
+})
+
+builder.addCase(uploadImg.fulfilled,(state,action)=>{
+    const {url}=action.payload
+    
+    let temp=JSON.parse(JSON.stringify(state.loggedInUser))
+    
+
+   state.loading=false
+   state.msg="uploaded"
+   state.img=action.payload
+   
+   
+})
+
+builder.addCase(uploadImg.rejected,(state,action)=>{
+   state.loading=false
+   state.msg=""
+   state.err=action.payload
+   
+   
+   
+})
+
 
 
 
@@ -848,4 +967,4 @@ builder.addCase(removeScriptFav.rejected,(state,action)=>{
 
 export default userSlice.reducer
 
-export const {clearMsg} =userSlice.actions
+export const {clearMsg,setActivePage} =userSlice.actions
