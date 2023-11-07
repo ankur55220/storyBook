@@ -141,7 +141,7 @@ export const getSingleData=createAsyncThunk(
     async(userDetails,{rejectWithValue})=>{
         try{
 
-            console.log("asdafefmmmmmmmmm")
+            console.log("asdafefmmmmmmmmm",url)
             const token=getLoggedInUser();
             const myPosts=await axios.post(`${url}/getSingleStory`,userDetails,{
                 headers:{

@@ -21,6 +21,9 @@ import { getMyPublished,getMyAudio } from '../../../../store/user-slice';
 import { AddNotify,changeNavTrigger,AddaudioNotify } from '../../../../store/editor-slice';
 import Alert from '@mui/material/Alert';
 import ReactTimeAgo from 'react-time-ago'
+import UseLocalStorage from '../../../../hooks/UseLocalStorage';
+import axios from 'axios';
+import { url } from '../../../../url';
 
 const HeadWrapper = styled.div`
     width: 100%;
@@ -57,7 +60,7 @@ function CardHead({profileType,type,align,img,name,postId,userId,text,noMenu,pos
 
   const [trigger,setTrigger] = useState(true)
   const [trigger2,setTrigger2] = useState(true)
-
+  const {getLoggedInUser}=UseLocalStorage()
 
   const navigate=useNavigate()
   
@@ -76,6 +79,34 @@ function CardHead({profileType,type,align,img,name,postId,userId,text,noMenu,pos
   const  audid=useSelector((state)=>state.audio.audId)
   const logged=useSelector((state)=>state.users)
    const dispatch=useDispatch()
+
+   const handleFollowNotify=async(proType)=>{
+
+    const token=getLoggedInUser()
+    
+      const val={
+        type:proType,
+        postid:postId,
+        data:[],
+        audid,
+        by:name
+        
+  
+      }
+
+      const res=await axios.post(`${url}/AddfollowNotification`,val,{
+
+        headers:{
+          'Authorization': `Bearer ${token}`,
+              'Accept'       : 'application/json'
+
+      }
+
+      
+      })
+      return res.data.success
+    }
+
 
 
    const handleNotifications=(proType)=>{
@@ -181,7 +212,7 @@ function CardHead({profileType,type,align,img,name,postId,userId,text,noMenu,pos
     dispatch(publishStory(data))
     .then(()=>dispatch(changeNavTrigger()))
     handleNotifications("scripts")
-    
+    handleFollowNotify("scripts")
    
   }
 
@@ -193,14 +224,15 @@ function CardHead({profileType,type,align,img,name,postId,userId,text,noMenu,pos
 
   useEffect(()=>{
 
-    if(audid!=""){
+    if(audid!="" && name){
 
       console.log("ddddddddddddddddd",audid)
       handleNotifications("audios")
+      handleFollowNotify("audios")
 
     }
 
-  },[audid])
+  },[audid,name])
 
   const clickHandler2=()=>{
     setTrigger2(true)
@@ -274,6 +306,7 @@ function CardHead({profileType,type,align,img,name,postId,userId,text,noMenu,pos
 
     <>
     <HeadWrapper align={align}>
+      
       <div
         className="headLeft"
         style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
@@ -297,10 +330,11 @@ function CardHead({profileType,type,align,img,name,postId,userId,text,noMenu,pos
   type?null:(
 
     <div className="headRight">
+      
 
       {
 
-text=="published" && !noMenu && postType=="audios"?(
+text=="published" && !noMenu && postType=="audios" && profileType!="Othersprofile"?(
   <Tooltip title="unpublish">
 <PublishIcon style={{ marginRight: '0.2rem', color: '#587b7f', cursor: 'pointer' }} onClick={handleUnpublishAudio} />
 </Tooltip>
@@ -310,7 +344,7 @@ text=="published" && !noMenu && postType=="audios"?(
       }
 
       {
-        text=="published" && !noMenu && postType=="scripts"?(
+        text=="published" && !noMenu && postType=="scripts" && profileType!="Othersprofile"?(
           <Tooltip title="unpublish">
         <PublishIcon style={{ marginRight: '0.2rem', color: '#587b7f', cursor: 'pointer' }} onClick={handleUnpublish} />
       </Tooltip>
@@ -348,7 +382,7 @@ text=="published" && !noMenu && postType=="audios"?(
         </div>
         <DialogContent>
          
-          <Editor1 purpose="summarise" url={postId && `https://storybook-app-web.onrender.com/publish/${postId}`} address="address" customWidth="100%"/>
+          <Editor1 purpose="summarise" url={postId && `http://localhost:8080/publish/${postId}`} address="address" customWidth="100%"/>
           {
             
             EditorData.loading && setTrigger?<CircularProgress />:
@@ -373,7 +407,7 @@ text=="published" && !noMenu && postType=="audios"?(
         </div>
         <DialogContent>
          
-          <Editor1 purpose="summarise" type="upload" url={postId && `https://storybook-app-web.onrender.com/publish/${postId}`} customWidth="100%"/>
+          <Editor1 purpose="summarise" type="upload" url={postId && `http://localhost:8080/publish/${postId}`} customWidth="100%"/>
           {
             EditorData.loading && !setTrigger2?<CircularProgress />:
             EditorData.msg?<Alert severity="success">{EditorData.msg}</Alert>:

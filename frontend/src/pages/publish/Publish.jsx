@@ -12,18 +12,23 @@ function Publish() {
     const editor=useSelector((state)=>state.editor)
 
     useEffect(()=>{
+      console.log(id,"here")
+        if(id){
+          dispatch(getSingleData({id}))
+        }
+       
 
-        dispatch(getSingleData({id}))
-
-    },[])
+    },[id])
   return (
     <div style={{width:"100%",height:"100vh",display:"flex",justifyContent:"center",alignItems:"flex-start",paddingTop:"5rem"}}>
-
+   <button onClick={()=>{console.log(editor.backendEditdata.posts[0])}}>click here</button>
         {
-            editor.loading?<CircularProgress/>:
-            <Editor1 content={editor.backendEditdata.posts[0].body} type="readOnly"/>
+            editor.loading  && !Array.isArray(editor.backendEditdata.posts) ?<CircularProgress/>:
+
+
+            <Editor1 content={Array.isArray(editor.backendEditdata.posts)?editor.backendEditdata.posts[0].body:""} type="readOnly"/>
         }
-        
+      
         
     </div>
   )

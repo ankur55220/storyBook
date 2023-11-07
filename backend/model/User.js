@@ -6,6 +6,17 @@ const userSchema = new mongoose.Schema({
         required:[true,"please enter username"],
         uique:true
     },
+    following:[{
+        id:{
+            type:String
+        }
+    }],
+    followers:[{
+        if:{
+            type:String
+        }
+
+    }],
     email:{
         type:String,
         required:[true,"please enter email"],
@@ -41,6 +52,9 @@ const userSchema = new mongoose.Schema({
             type:String
         },
         seen:{
+            type:String
+        },
+        by:{
             type:String
         }
     }],

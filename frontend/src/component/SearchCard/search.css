@@ -24,6 +24,8 @@
     object-fit: cover;
     border-radius: 100%;
     overflow: hidden;
+    min-width: 1rem;
+    min-height: 1rem;
 }
 
 .search-img img{
@@ -32,5 +34,22 @@
 }
 
 .search-name{
-    margin-left:1rem;
+    margin-left:5%;
+    
+}
+
+@media (min-width: 769px) and (max-width: 1100px) {
+
+    .searchCard{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .search-name{
+        overflow-wrap:anywhere;
+    }
+
+   
+
 }

@@ -23,7 +23,7 @@ width:${props=>props.width?props.width:"60%"};
 
 margin-left:7rem;
 
-@media (max-width: 768px) {
+@media (max-width: 850px) {
     width:95%;
     margin-left:0;
     margin:auto;
@@ -53,7 +53,7 @@ margin-right:1rem;
 
 
 `
-function Container({width,loading,error,posts,authors,user,type,postType,typeOf,likesNo,dislikesNo,userLiked,userDisliked}) {
+function Container({otherUserId,width,loading,error,posts,authors,user,type,postType,typeOf,likesNo,dislikesNo,userLiked,userDisliked}) {
 
 
   const details=useSelector(state=>state.users)
@@ -142,6 +142,8 @@ useEffect(()=>{
   },[editInfo.typeOfPost])
   return (
     <Container2 width={width}>
+
+
         <Title title="Latest Posts"/>
 
        
@@ -160,7 +162,7 @@ useEffect(()=>{
         </ShortMsg>
 
         {
-          type=="Home" || details.save=="published" || details.save=="Fav" || editInfo.active=="audios"?
+          type=="Home" || details.save=="published" || details.save=="Fav" || editInfo.active=="audios" || typeOf=="Othersprofile" ?
           <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Post</InputLabel>

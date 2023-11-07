@@ -61,9 +61,9 @@ function Navbar() {
 
     
     const locArray=window.location.href.split("/")
-
+    dispatch(getMyId())
     dispatch(setActivePage(locArray[locArray.length-1]))
-
+    
     
 
   },[window.location.href])
@@ -73,7 +73,7 @@ function Navbar() {
 
     if(pages!=""){
     
-      navigate("/home")
+      navigate(`/${pages}`)
 
     }
   };
@@ -202,7 +202,7 @@ function Navbar() {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -255,7 +255,11 @@ function Navbar() {
 
       console.log(item)
 
-      return <div onClick={()=>{clickHandler(item.postid,item.format,item.audid,item._id)}} style={{color:item.seen=="no"?"black":"#d3d3d3",cursor:"pointer",marginBottom:"0.3rem"}}>{item.format=="audiosNoti"?"new audio for your script":"you have been tagged"}</div>
+      return <div onClick={()=>{clickHandler(item.postid,item.format,item.audid,item._id)}} style={{color:item.seen=="no"?"black":"#d3d3d3",cursor:"pointer",marginBottom:"0.3rem"}}>{
+        item.format=="audiofill" && item.by?`${item.by} has filled your script`:
+        item.format=="audiosNoti" && item.by? `${item.by} posted new audio`:
+        item.format=="scripts" && item.by?`${item.by} has posted new script`:
+        "you have been tagged"}</div>
     }):"no new notifications"
   }
 </div>:null

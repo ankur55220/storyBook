@@ -55,14 +55,14 @@ export const uploadImg=createAsyncThunk(
 )
 
 
-export const addNewNotify=createAsyncThunk(
+export const addFollow=createAsyncThunk(
     'users/addNewNot',
     async (userdetails,{rejectWithValue})=>{
 
         try{
             const token=getLoggedInUser();
 
-           const  response=await axios.post(`${url}/addnewnotify`,userdetails,{
+           const  response=await axios.post(`${url}/Follow`,userdetails,{
             headers:{
                 'Authorization': `Bearer ${token}`,
                     'Accept'       : 'application/json'
@@ -542,6 +542,9 @@ const userSlice= createSlice({
         },
         setActivePage(state,action){
             state.activePage=action.payload
+        },
+        makeSaveNeutral(state,action){
+            state.save=""
         }
 
     }    ,
@@ -600,28 +603,21 @@ const userSlice= createSlice({
             state.save=""
         })
 
-        builder.addCase(addNewNotify.pending,(state,action)=>{
-            state.loading=true,
-            state.msg=""
-            state.save=""
+        builder.addCase(addFollow.pending,(state,action)=>{
+            
         })
        
 
-        builder.addCase(addNewNotify.fulfilled,(state,action)=>{
-            state.loading=false
-    
-            state.msg="successfully followed"
+        builder.addCase(addFollow.fulfilled,(state,action)=>{
+            
 
             
         })
 
-        builder.addCase(addNewNotify.rejected,(state,action)=>{
+        builder.addCase(addFollow.rejected,(state,action)=>{
 
             
-            state.loading=false
-            state.msg=""
-            state.err=action.payload
-            state.save=""
+            
         })
 
 
@@ -967,4 +963,4 @@ builder.addCase(uploadImg.rejected,(state,action)=>{
 
 export default userSlice.reducer
 
-export const {clearMsg,setActivePage} =userSlice.actions
+export const {clearMsg,setActivePage,makeSaveNeutral} =userSlice.actions

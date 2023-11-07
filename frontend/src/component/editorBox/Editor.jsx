@@ -558,7 +558,6 @@ useEffect(()=>{
   return (
     <>
 
-    <button onClick={()=>{console.log(purpose)}}>edit work</button>
 
 {
   loading?<CircularProgress />:(

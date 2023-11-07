@@ -45,7 +45,7 @@ function Profile() {
   return (
     <PageWrapperFullScreen>
       
-
+      {/* <button onClick={()=>{console.log(loggedUser)}}>clickk faaast</button> */}
 
          <Sidebar type="profile" loading={loggedUser.loading} error={loggedUser.err} user={loggedUser.loggedInUser.user}/>
 

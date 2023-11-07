@@ -10,4 +10,5 @@ router.route('/signup').post(RegisterController);
 router.route('/uploadImg').post(imageUpload);
 
 
+
 export default router

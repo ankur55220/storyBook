@@ -1,6 +1,6 @@
 import express from "express"
 import { ValidatorMiddleware } from "../middleware/Validator.js";
-import {searchUser,likedAndNumbers,AddLikes,AddAudioNotify,markAsSeen,AddNotification,getNamesAndId,removeAudioFromFavourite,removeScriptFromFavourite,unPublishScript,unPublishAudio,deleteSave,addFavourite,getpublishedById,updateFav,getSingleBookMark,getAllBookMark,removeBookmark,addbookmark,getSingleSave,publishStory,updateedit,editSave,getUserId,storiesPublishedByUser,getAllFav,AddNewStory,getAllStory,getAllpublishedStories,getAllUnPublishedStories,AllStoriesByUser,getSingleStory,updateStory,deleteStory} from "../controller/storyController.js"
+import {AddfollowNotification,Follow,isFollowing,searchUser,likedAndNumbers,AddLikes,AddAudioNotify,markAsSeen,AddNotification,getNamesAndId,removeAudioFromFavourite,removeScriptFromFavourite,unPublishScript,unPublishAudio,deleteSave,addFavourite,getpublishedById,updateFav,getSingleBookMark,getAllBookMark,removeBookmark,addbookmark,getSingleSave,publishStory,updateedit,editSave,getUserId,storiesPublishedByUser,getAllFav,AddNewStory,getAllStory,getAllpublishedStories,getAllUnPublishedStories,AllStoriesByUser,getSingleStory,updateStory,deleteStory} from "../controller/storyController.js"
 const router=express.Router();
 
 
@@ -42,8 +42,9 @@ router.route("/AddAudioNotify").post(AddAudioNotify)
 router.route("/AddLikes").post(AddLikes)
 router.route("/likedAndNumbers").post(likedAndNumbers)
 router.route("/searchUser").post(searchUser)
-
-
+router.route('/isFollowing').post(isFollowing);
+router.route('/Follow').post(Follow);
+router.route('/AddfollowNotification').post(AddfollowNotification);
 
 
 

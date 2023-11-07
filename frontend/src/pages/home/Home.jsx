@@ -9,7 +9,7 @@ import { useEffect } from 'react'
 import { updateLikeStatus } from '../../store/comment-slice'
 import { changeLikeStatus } from '../../store/editor-slice'
 
-import { getMyId } from '../../store/user-slice'
+import { getMyId,makeSaveNeutral } from '../../store/user-slice'
 import { useState } from 'react'
 import { getFalse } from '../../store/editor-slice'
 
@@ -29,10 +29,10 @@ const StoryData=useSelector(state=>state.editor)
 const dispatch=useDispatch()
 useEffect(()=>{
   console.log("sdjashgdj====")
-  dispatch(getMyId())
-// dispatch(getAllPublished("hey"))
-// .then(()=>{dispatch(getMyId())} )
-// dispatch(updateLikeStatus(""))
+  
+dispatch(getAllPublished("hey"))
+.then(()=>{dispatch(getMyId())} )
+.then(()=>dispatch(makeSaveNeutral()))
   
 },[])
 

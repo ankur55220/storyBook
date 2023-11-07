@@ -13,7 +13,13 @@ function SearchCard({name,image,id}) {
         <div className="search-img">
             <img src={image} alt="" />
         </div>
-        <div className="search-name">{name}</div>
+        <div className="search-name">
+          <p style={{width:"100%",wordWrap:"break-word"}}>
+          {name}
+          </p>
+          
+          
+          </div>
         
     </div>
   )

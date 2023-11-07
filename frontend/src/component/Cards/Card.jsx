@@ -52,22 +52,26 @@ posts.map((item,idx)=>{
         console.log(item,"here")
         console.log(postType && usersInfo.save=="Fav" && postType!="audios")
 
-        console.log(postType,usersInfo.save)
+        
 
         // authors && authors.length==1 && authors._id==user._id
-        if(typeof(item)!="undefined" && authors && authors.length==1){
+        if((typeof(item)!="undefined" && typeof(item)!==null) && authors && authors.length==1){
+
+          console.log(typeof(item),"hereee")
           return (
-            <CardWrapper bg={bg} rad={rad}>
+            
+        <CardWrapper bg={bg} rad={rad}>
           <CardHead 
           postType={postType} 
           noMenu={noMenu} 
           profileType={post}
           text={usersInfo.save} 
-          img={post&&post=="Othersprofile"?user.img:authors[0].profilePic} 
-          name={post&&post=="Othersprofile"?user.username:authors[0].username} 
+          img={post&&post=="Othersprofile"?user.img:authors[0]?.profilePic} 
+          name={post&&post=="Othersprofile"?user.username:authors[0]?.username} 
           audId={usersInfo.save!="save" && postType=="audios"?item._id:undefined} 
-          postId={usersInfo.save=="Fav" && postType!="audios"?item.postId:item._id} 
-          userId={authors[0]._id}/>
+          postId={usersInfo.save=="Fav" && postType!="audios"?item.postId:!Object.is(item,null)?item._id:""} 
+          userId={authors[0]?._id}/>
+          
           {
             usersInfo.save=="save"? <CardTitle title={item.title} genre={item.genre}/>:<CardBody genre={item.genre} body={item.summary} />
             
@@ -78,19 +82,19 @@ posts.map((item,idx)=>{
           isFav={isFav} 
           postFormat={postFormat} 
           noMenu={noMenu} 
-          text={usersInfo.save} 
+          text={usersInfo?.save} 
           postType={postType} 
           pos={post?post:""} 
-           body={item.body}
+           body={item?.body}
            fromPost={comingFromPost}
-           postId={usersInfo.save=="Fav" && postType!="audios"?item.postId:item._id} 
-           authId={item.author}
-           userId={authors[0]._id}
+           postId={usersInfo.save=="Fav" && postType!="audios"?item.postId:item?._id} 
+           authId={item?.author}
+           userId={authors[0]?._id}
            likes={likesNo[idx]}
            dislikes={dislikesNo[idx]}
            isLiked={userLiked[idx]}
            isDisliked={userDisliked[idx]}
-           summary={item.summary}
+           summary={item?.summary}
            />
           </CardWrapper>
 
@@ -105,12 +109,13 @@ posts.map((item,idx)=>{
           postType={postType} 
           profileType={post}
           noMenu={noMenu} 
-          text={usersInfo.save} 
-          img={post&&post=="Othersprofile"?user.img:authors[idx].profilePic} 
-          name={post&&post=="Othersprofile"?user.username:authors[idx].username} 
-          audId={usersInfo.save=="Fav" && postType=="audios"?item._id:undefined} 
-          postId={usersInfo.save=="Fav" && postType!="audio"?item.postId:item._id} 
+          text={usersInfo?.save} 
+          img={post&&post=="Othersprofile"?user.img:authors[idx]?.profilePic} 
+          name={post&&post=="Othersprofile"?user.username:authors[idx]?.username} 
+          audId={usersInfo.save=="Fav" && postType=="audios"?item?._id:undefined} 
+          postId={usersInfo.save=="Fav" && postType!="audio"?item.postId:item?._id} 
           userId={authors[idx]._id}/>
+          
           {
             usersInfo.save=="save" ? <CardTitle title={item.title}/>:<CardBody body={item.summary}  />
           }
@@ -123,15 +128,15 @@ posts.map((item,idx)=>{
           text={usersInfo.save} 
           postType={postType} 
           pos={post?post:""} 
-          postId={usersInfo.save=="Fav" && postType!="audios"?item.postId:item._id} 
+          postId={usersInfo.save=="Fav" && postType!="audios"?item.postId:item?._id} 
           fromPost={comingFromPost}
-          userId={authors[idx]._id} 
-          body={item.body}
+          userId={authors[idx]?._id} 
+          body={item?.body}
           likes={likesNo[idx]}
            dislikes={dislikesNo[idx]}
            isLiked={userLiked[idx]}
            isDisliked={userDisliked[idx]}
-           summary={item.summary}
+           summary={item?.summary}
           />
           </CardWrapper>
 

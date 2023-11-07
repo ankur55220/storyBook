@@ -28,10 +28,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { uploadImg } from '../../store/user-slice';
+import { uploadImg,addFollow } from '../../store/user-slice';
 import PropTypes from 'prop-types';
 import SearchIcon from '@mui/icons-material/Search';
-import { url } from '../../url';
+import { url as mainurl } from '../../url';
+import "./sidebar.css"
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -85,14 +86,17 @@ const ProfilePic = ({ user }) => {
   };
 
   const right_profile = {
-    marginLeft: '1.5rem'
+    marginLeft: '1rem',
+    width:"60%"
   };
 
   const pro_i = {
     display: 'flex',
+    flexDirection:"column",
     width: '100%',
-    alignItems: 'center',
-    justifyContent: 'flex-start'
+    alignItems: 'flex-Start',
+    justifyContent: 'flex-start',
+    
   };
 
   const img_pro = {
@@ -105,11 +109,11 @@ const ProfilePic = ({ user }) => {
   }, [user]);
   return (
     <div className="profile" style={style}>
-      <div className="left_profile">
+      <div className="left_profile" style={{width:"40%",maxWidth:"4rem"}}>
         <img style={img_pro} src={user?.img} alt="" className="img_pro" />
       </div>
       <div className="right_profile" style={right_profile}>
-        <div className="pro_name">{user?.username}</div>
+        <div className="pro_name" style={{marginBottom:"0.5rem"}}>{user?.username}</div>
         <div className="pro_i" style={pro_i}>
           <div className="info" style={{ width: '50%', fontSize: '0.5rem' }}>
             Published&nbsp;&nbsp;{user?.count}
@@ -127,13 +131,13 @@ const ProfilePic = ({ user }) => {
 
 const Btn = styled1.button`
 display: inline-block;
-padding: 0.5rem 2rem;
+padding: 0.5rem 1.5rem;
 outline: none;
 border: none;
 background-color: #${(props) => props.theme.colors.btn_bg_light};
 color: #${(props) => props.theme.colors.btn_clr_light};
-font-size: 1rem;
-letter-spacing: 2px;
+font-size: 0.8rem;
+letter-spacing: 1px;
 border-radius: 5px;
 display: flex;
 align-items: center;
@@ -153,9 +157,11 @@ const SideBar = styled1.div`
   position: sticky;
   top: 0;
   left: 0;
-  z-index:20;
-  @media (max-width: 768px) {
+  z-index:0;
+  @media (max-width: 850px) {
     width: 100%;
+    position:static;
+    z-index:0;
   }
 `;
 const SideBarBody = styled1.div`
@@ -168,7 +174,7 @@ const SideBarBody = styled1.div`
   flex-direction: column;
   align-items: space-between;
   justify-content: space-between;
-  @media (max-width: 768px) {
+  @media (max-width: 850px) {
     flex-direction: row;
   }
 `;
@@ -197,6 +203,7 @@ const SearchBlock=styled1.div`
 
 position:relative;
 padding:0;
+border:1px solid blue;
 
 
 `
@@ -205,7 +212,7 @@ const SearchedPeople=styled1.div`
 
 position:absolute;
 width:100%;
-padding:${(props)=>props.textlen==0?"0px":"1rem 2rem"};
+padding:${(props)=>props.textlen==0?"0px":"1rem 1rem"};
 height:${(props)=>props.textlen== 0?"0px":props.cond==0?"3rem":props.cond>0?"auto":"auto"};
 
 background-color:#ffffff;
@@ -220,15 +227,19 @@ transition:all 1s;
 ;
 `
 
-const ProfileMenu = ({ typeOf, id }) => {
+const ProfileMenu = ({ typeOf, id ,userid}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const {getLoggedInUser}=UseLocalStorage()
 
   const [proType, setProtype] = useState('fav');
   const [file, setFile] = useState();
   const [percent, setPercentage] = useState(0);
   const [url, setUrl] = useState('');
   const [open, setOpen] = React.useState(false);
+  const [isFollow,setIsFollow]=useState(null)
+  const [loading,setLoading]=useState(false)
 
   const handleClickOpen = () => {
     setPercentage(0);
@@ -302,18 +313,76 @@ const ProfileMenu = ({ typeOf, id }) => {
     );
   };
 
+  const followHandler=()=>{
+
+    setLoading(true)
+   console.log(userid,"checkkkkpp")
+    dispatch(addFollow({userWhoIsBeingFollowed:userid}))
+    .then(()=>{
+      isFollowing()
+      .then((res)=>{setIsFollow(res)})
+      
+    })
+
+    setLoading(false)
+
+  }
+
+  const isFollowing=async ()=>{
+    const token=getLoggedInUser()
+      
+    const response= await axios.post(`${mainurl}/isFollowing`,{currUser:userid},{
+      headers:{
+        'Authorization': `Bearer ${token}`,
+            'Accept'       : 'application/json'
+
+    }
+    })
+
+    console.log(response.data,"8u8u")
+    return response.data.result
+
+
+  }
+
+  useEffect(()=>{
+  
+    setLoading(true)
+
+  const val=  isFollowing()
+
+  val.then((res)=>{
+    setIsFollow(res)
+  })
+  .catch((err)=>{
+    console.log(err)
+  })
+  
+
+  
+
+  setLoading(false)
+
+
+  },[])
+
   return (
     <>
       {typeOf == 'Othersprofile' ? (
         <>
-        <MenuItem
+        {/* <MenuItem
           onClick={() => {
             clickHandler('published');
-          }}>
+          }}
+          sx={{whiteSpace:"nowrap"}}
+          >
           <PublishedWithChangesIcon />
-          &nbsp;&nbsp;&nbsp;published posts
-        </MenuItem>
-        {/* <Btn>follow</Btn> */}
+          &nbsp;published posts
+        </MenuItem> */}
+        {
+          loading?<CircularProgress size="2rem"/>:<Btn onClick={followHandler}>{isFollow?"Following":"Follow"}</Btn>
+        }
+        
         </>
       ) : (
         <>
@@ -392,7 +461,7 @@ const ProfileMenu = ({ typeOf, id }) => {
     </>
   );
 };
-function Sidebar({ type, loading, error, user }) {
+function Sidebar({ type, loading, error, user,userId }) {
   const navigate = useNavigate();
 
   const {getLoggedInUser}=UseLocalStorage()
@@ -412,20 +481,28 @@ function Sidebar({ type, loading, error, user }) {
 
 
   async function handleChange(){
-    setCurrloading(true)
-    const token=getLoggedInUser()
-     const response= await axios.post(`${url}/searchUser`,{text},{
 
-      headers:{
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+    try{
+      console.log("jjRRR")
+      setCurrloading(true)
+      const token=getLoggedInUser()
+       const response= await axios.post(`${mainurl}/searchUser`,{text},{
+  
+        headers:{
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+      }
+       })
+  
+       console.log(response.data)
+       setUserData(response.data.AllUsers)
+  
+       setCurrloading(false)
     }
-     })
-
-     console.log(response.data)
-     setUserData(response.data.AllUsers)
-
-     setCurrloading(false)
+    catch(err){
+      console.log(err)
+    }
+   
   }
 
 
@@ -433,6 +510,7 @@ function Sidebar({ type, loading, error, user }) {
 
     if(text.length==0){
       setUserData([])
+      setCurrloading(false)
     }
 let timeout=setTimeout(()=>{
   if(text.length>0){
@@ -450,7 +528,6 @@ let timeout=setTimeout(()=>{
   };
   return (
     <SideBar>
-      <button onClick={()=>{console.log(userData.length,text.length)}}>click hereeee</button>
       <SideBarBody>
         <div className="upper_bar">
           {type && loading ? (
@@ -460,7 +537,7 @@ let timeout=setTimeout(()=>{
           ) : null}
 
           {type ? (
-            <ProfileMenu typeOf={type} id={user?.email} />
+            <ProfileMenu typeOf={type} id={user?.email} userid={userId} />
           ) : (
             <>
               <FirstMenuItem onClick={travel}>
@@ -481,7 +558,7 @@ let timeout=setTimeout(()=>{
 
         <SearchedPeople cond={userData.length?userData.length:0} textlen={text.length} >
           {
-            cuurLoading?"loading...":
+            
 
             userData.length==0 && text.length>0?<h8 style={{color:"black"}}>no such user found</h8>:
            userData.length>0? userData.map((item)=>{

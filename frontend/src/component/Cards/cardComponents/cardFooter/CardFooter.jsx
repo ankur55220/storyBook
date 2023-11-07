@@ -366,13 +366,11 @@ const [data,setData]=useState("")
     <CardFooterWrapper type={type}>
 
 
-   <button onClick={()=>{console.log(postId)}}>click abhi</button>
-
 
       {
         user.save=="save"?<>
 
-        <Tooltip title="Delete the scripy">
+        <Tooltip title="Delete the script">
         <DeleteIcon style={{marginRight:"0.5rem",color:"#587b7f",cursor:"pointer"}} onClick={deleteHandler}/>
    
         </Tooltip>
@@ -396,7 +394,7 @@ const [data,setData]=useState("")
        
 
        {
-        type=="comment"?<span style={{color:"#587b7f",cursor:"pointer"}} onClick={replyHandler}>{"reply"}</span>  :<span style={{color:"#587b7f"}} onClick={moreHandler}>{"more"}</span>
+        type=="comment"?<span style={{color:"#587b7f",cursor:"pointer"}} onClick={replyHandler}>{"reply"}</span>  :pos!="post"?<span style={{color:"#587b7f"}} onClick={moreHandler}>{"more"}</span>:null
        }
        
        {
